@@ -1,0 +1,2749 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>强基一班官网-高中函数求解器</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .nav-tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 1px solid #ddd;
+            flex-wrap: wrap;
+        }
+        
+        .tab {
+            padding: 15px 30px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #666;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+            white-space: nowrap;
+        }
+        
+        .tab:hover {
+            background: #e9ecef;
+        }
+        
+        .tab.active {
+            color: #4facfe;
+            border-bottom: 3px solid #4facfe;
+            background: white;
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 30px;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 30px;
+        }
+        
+        @media (max-width: 1200px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .control-panel {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            max-height: calc(100vh - 200px);
+            overflow-y: auto;
+        }
+        
+        .section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border: 1px solid #eaeaea;
+        }
+        
+        .section-title {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #4facfe;
+        }
+        
+        .function-display {
+            background: #f8f9fa;
+            border: 2px solid #4facfe;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            min-height: 60px;
+            font-size: 1.2em;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 5px;
+            font-family: 'Cambria Math', 'STIX Two Math', serif;
+        }
+        
+        .keyboard {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 8px;
+            margin: 15px 0;
+        }
+        
+        .key {
+            background: #4facfe;
+            color: white;
+            border: none;
+            padding: 12px 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+        
+        .key:hover {
+            background: #3a9df5;
+            transform: translateY(-1px);
+            box-shadow: 0 3px 5px rgba(0,0,0,0.1);
+        }
+        
+        .key.special {
+            background: #764ba2;
+        }
+        
+        .key.operation {
+            background: #f093fb;
+        }
+        
+        .input-group {
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .input-group label {
+            min-width: 80px;
+            font-weight: 500;
+        }
+        
+        input[type="number"], input[type="text"], select {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            flex: 1;
+            font-size: 14px;
+        }
+        
+        .analysis-panel {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #eaeaea;
+        }
+        
+        .analysis-result {
+            margin: 10px 0;
+            padding: 12px;
+            background: linear-gradient(to right, #f8f9fa, #f0f8ff);
+            border-radius: 5px;
+            border-left: 4px solid #4facfe;
+        }
+        
+        .analysis-result.permanent {
+            border-left: 4px solid #2ed573;
+            background: linear-gradient(to right, #f0fff4, #e8fcf1);
+        }
+        
+        .graph-container {
+            position: relative;
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border: 1px solid #eaeaea;
+        }
+        
+        canvas {
+            width: 100%;
+            height: 500px;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            background: white;
+            cursor: crosshair;
+        }
+        
+        .coordinate-display {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.95);
+            padding: 10px 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            font-family: 'Courier New', monospace;
+            font-weight: 500;
+            border: 1px solid #e0e0e0;
+        }
+        
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(to right, #4facfe, #00f2fe);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #333;
+            border: 2px solid #ddd;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .error-message {
+            color: #e74c3c;
+            padding: 12px;
+            background: #ffeaea;
+            border-radius: 5px;
+            margin: 10px 0;
+            display: none;
+            border-left: 4px solid #e74c3c;
+        }
+        
+        .function-list {
+            margin: 10px 0;
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            padding: 10px;
+        }
+        
+        .function-item {
+            padding: 8px 12px;
+            margin: 5px 0;
+            background: #f8f9fa;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .function-item .color-indicator {
+            width: 20px;
+            height: 20px;
+            border-radius: 3px;
+            margin-right: 10px;
+        }
+        
+        .exact-value {
+            font-family: 'Cambria Math', 'STIX Two Math', serif;
+            font-style: italic;
+            color: #2c3e50;
+        }
+        
+        .symbolic-result {
+            color: #2c3e50;
+            font-weight: 500;
+            font-family: 'Cambria Math', 'STIX Two Math', serif;
+        }
+        
+        .calculator-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 8px;
+            margin: 20px 0;
+        }
+        
+        .calc-display {
+            grid-column: 1 / -1;
+            background: #f8f9fa;
+            border: 2px solid #4facfe;
+            border-radius: 8px;
+            padding: 20px;
+            font-size: 1.5em;
+            text-align: right;
+            min-height: 80px;
+            word-wrap: break-word;
+            font-family: 'Cambria Math', 'STIX Two Math', serif;
+        }
+        
+        .calculator-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        @media (max-width: 900px) {
+            .calculator-section {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .comparison-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .comparison-result {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        .data-panel {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            max-height: 200px;
+            overflow-y: auto;
+            font-size: 12px;
+            min-width: 200px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .data-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 3px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .data-row:hover {
+            background: #f5f5f5;
+        }
+        
+        .analysis-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .clear-analysis {
+            background: #ff4757;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            cursor: pointer;
+        }
+        
+        .multi-function-controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>小组件-中学函数求解器SeniorFunctionSolver(SFS)</h1>
+            <p>by fengxing2202王维康</p>
+            <p>！比大小功能有部分问题！</p>
+        </div>
+        
+        <div class="nav-tabs">
+            <div class="tab active" onclick="switchTab('function')">函数性质分析</div>
+            <div class="tab" onclick="switchTab('calculator')">计算器</div>
+            <div class="tab" onclick="switchTab('comparison')">比大小(部分功能无法实现)</div>
+            <div class="tab" onclick="switchTab('multi-function')">多函数分析</div>
+        </div>
+        
+        <!-- 函数图像页面 -->
+        <div id="function-tab" class="tab-content active">
+            <div class="main-content">
+                <div class="control-panel">
+                    <!-- 函数输入部分 -->
+                    <div class="section">
+                        <div class="section-title">函数表达式</div>
+                        <div class="function-display" id="functionDisplay">
+                            <span id="functionText">y = </span>
+                        </div>
+                        
+                        <div class="keyboard" id="keyboard">
+                            <!-- 数字键 -->
+                            <button class="key" onclick="addToExpression('1')">1</button>
+                            <button class="key" onclick="addToExpression('2')">2</button>
+                            <button class="key" onclick="addToExpression('3')">3</button>
+                            <button class="key" onclick="addToExpression('4')">4</button>
+                            <button class="key" onclick="addToExpression('5')">5</button>
+                            <button class="key" onclick="addToExpression('6')">6</button>
+                            <button class="key" onclick="addToExpression('7')">7</button>
+                            <button class="key" onclick="addToExpression('8')">8</button>
+                            <button class="key" onclick="addToExpression('9')">9</button>
+                            <button class="key" onclick="addToExpression('0')">0</button>
+                            <button class="key" onclick="addToExpression('.')">.</button>
+                            
+                            <!-- 运算符 -->
+                            <button class="key operation" onclick="addToExpression('+')">+</button>
+                            <button class="key operation" onclick="addToExpression('-')">-</button>
+                            <button class="key operation" onclick="addToExpression('*')">×</button>
+                            <button class="key operation" onclick="addToExpression('/')">÷</button>
+                            <button class="key operation" onclick="addToExpression('(')">(</button>
+                            <button class="key operation" onclick="addToExpression(')')">)</button>
+                            <button class="key operation" onclick="addToExpression('^')">^</button>
+                            
+                            <!-- 数学函数 -->
+                            <button class="key special" onclick="addToExpression('sin(')">sin</button>
+                            <button class="key special" onclick="addToExpression('cos(')">cos</button>
+                            <button class="key special" onclick="addToExpression('tan(')">tan</button>
+                            <button class="key special" onclick="addToExpression('log(')">log</button>
+                            <button class="key special" onclick="addToExpression('ln(')">ln</button>
+                            <button class="key special" onclick="addToExpression('sqrt(')">√</button>
+                            <button class="key special" onclick="addToExpression('abs(')">绝对值abs</button>
+                            <button class="key special" onclick="addToExpression('exp(')">自然指数e^x</button>
+                            <button class="key special" onclick="addToExpression('floor(')">向下取整floor</button>
+                            <button class="key special" onclick="addToExpression('ceil(')">向上取整ceil</button>
+                            <button class="key special" onclick="addToExpression('round(')">四舍五入round</button>
+                            
+                            <!-- 常数和变量 -->
+                            <button class="key special" onclick="addToExpression('pi')">π</button>
+                            <button class="key special" onclick="addToExpression('e')">e</button>
+                            <button class="key special" onclick="addToExpression('x')">x</button>
+                        </div>
+                        
+                        <div style="display: flex; gap: 10px; margin-top: 15px;">
+                            <button onclick="clearExpression()" class="btn-secondary">清空</button>
+                            <button onclick="removeLast()" class="btn-secondary">删除</button>
+                        </div>
+                    </div>
+                    
+                    <!-- 坐标系设置 -->
+                    <div class="section">
+                        <div class="section-title">坐标系设置</div>
+                        <div class="input-group">
+                            <label>X范围:</label>
+                            <input type="number" id="xMin" placeholder="最小" value="-10" step="1">
+                            <span>到</span>
+                            <input type="number" id="xMax" placeholder="最大" value="10" step="1">
+                        </div>
+                        <div class="input-group">
+                            <label>Y范围:</label>
+                            <input type="number" id="yMin" placeholder="最小" value="-10" step="1">
+                            <span>到</span>
+                            <input type="number" id="yMax" placeholder="最大" value="10" step="1">
+                        </div>
+                        <div class="input-group">
+                            <label>采样密度:</label>
+                            <input type="range" id="samplingDensity" min="1" max="10" value="5" step="1" oninput="updateDensityValue()">
+                            <span id="densityValue">中</span>
+                        </div>
+                    </div>
+                    
+                    <!-- 函数分析 -->
+                    <div class="section">
+                        <div class="section-title">函数分析工具</div>
+                        <div class="input-group">
+                            <label>分析区间:</label>
+                            <input type="number" id="analyzeMin" placeholder="x₁" value="-5" step="0.1">
+                            <span>到</span>
+                            <input type="number" id="analyzeMax" placeholder="x₂" value="5" step="0.1">
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px;">
+                            <button onclick="calculateRange()" class="btn-secondary">求值域</button>
+                            <button onclick="findRoots()" class="btn-secondary">求零点</button>
+                            <button onclick="findExtrema()" class="btn-secondary">求极值</button>
+                            <button onclick="analyzeSymmetry()" class="btn-secondary">对称分析</button>
+                            <button onclick="analyzeMonotonic()" class="btn-secondary" style="grid-column: span 2;">单调区间</button>
+                        </div>
+                    </div>
+                    
+                    <!-- 交点分析 -->
+                    <div class="section">
+                        <div class="section-title">交点分析</div>
+                        <div class="input-group">
+                            <label>直线方程:</label>
+                            <input type="text" id="lineEquation" placeholder="y=kx+b" value="y=x">
+                        </div>
+                        <button onclick="findIntersections()" class="btn-primary" style="width: 100%; margin-top: 10px;">求与直线交点</button>
+                    </div>
+                    
+                    <div class="error-message" id="errorMessage"></div>
+                    
+                    <div style="display: flex; gap: 10px; margin-top: 20px;">
+                        <button onclick="plotFunction()" class="btn-primary">绘制图像</button>
+                        <button onclick="addToMultiFunction()" class="btn-secondary">添加到多函数</button>
+                        <button onclick="resetView()" class="btn-secondary">重置视图</button>
+                    </div>
+                </div>
+                
+                <!-- 右侧图形区域 -->
+                <div class="graph-container">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <h3 style="margin: 0;">函数图像分析</h3>
+                        <div class="coordinate-display" id="coordinateDisplay">
+                            坐标: (0, 0)
+                        </div>
+                    </div>
+                    <canvas id="graphCanvas"></canvas>
+                    
+                    <!-- 数据面板 -->
+                    <div class="data-panel" id="dataPanel" style="display: none;">
+                        <div style="font-weight: bold; margin-bottom: 10px; color: #4facfe;">实时数据</div>
+                        <div id="dataContent">
+                            <!-- 数据内容动态生成 -->
+                        </div>
+                    </div>
+                    
+                    <!-- 分析结果 -->
+                    <div class="analysis-panel">
+                        <div class="analysis-controls">
+                            <div class="section-title">分析结果</div>
+                            <div class="clear-analysis" onclick="clearAnalysisResults()">清空分析</div>
+                        </div>
+                        <div id="analysisResults">
+                            <!-- 分析结果将显示在这里 -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 科学计算器页面 -->
+        <div id="calculator-tab" class="tab-content">
+            <div class="calculator-section">
+                <div class="control-panel">
+                    <div class="section">
+                        <div class="section-title">科学计算器</div>
+                        <div class="calc-display" id="calcDisplay">0</div>
+                        
+                        <div class="calculator-grid">
+                            <!-- 第一行 -->
+                            <button class="key" onclick="calcClear()">C</button>
+                            <button class="key" onclick="calcBackspace()">⌫</button>
+                            <button class="key" onclick="calcInput('(')">(</button>
+                            <button class="key" onclick="calcInput(')')">)</button>
+                            <button class="key special" onclick="calcInput('pi')">π</button>
+                            <button class="key special" onclick="calcInput('e')">e</button>
+                            
+                            <!-- 第二行 -->
+                            <button class="key special" onclick="calcInput('sin(')">sin</button>
+                            <button class="key special" onclick="calcInput('cos(')">cos</button>
+                            <button class="key special" onclick="calcInput('tan(')">tan</button>
+                            <button class="key" onclick="calcInput('7')">7</button>
+                            <button class="key" onclick="calcInput('8')">8</button>
+                            <button class="key" onclick="calcInput('9')">9</button>
+                            
+                            <!-- 第三行 -->
+                            <button class="key special" onclick="calcInput('log(')">log</button>
+                            <button class="key special" onclick="calcInput('ln(')">ln</button>
+                            <button class="key special" onclick="calcInput('sqrt(')">√</button>
+                            <button class="key" onclick="calcInput('4')">4</button>
+                            <button class="key" onclick="calcInput('5')">5</button>
+                            <button class="key" onclick="calcInput('6')">6</button>
+                            
+                            <!-- 第四行 -->
+                            <button class="key special" onclick="calcInput('abs(')">abs</button>
+                            <button class="key special" onclick="calcInput('floor(')">floor</button>
+                            <button class="key special" onclick="calcInput('ceil(')">ceil</button>
+                            <button class="key" onclick="calcInput('1')">1</button>
+                            <button class="key" onclick="calcInput('2')">2</button>
+                            <button class="key" onclick="calcInput('3')">3</button>
+                            
+                            <!-- 第五行 -->
+                            <button class="key operation" onclick="calcInput('+')">+</button>
+                            <button class="key operation" onclick="calcInput('-')">-</button>
+                            <button class="key operation" onclick="calcInput('*')">×</button>
+                            <button class="key operation" onclick="calcInput('/')">÷</button>
+                            <button class="key" onclick="calcInput('0')">0</button>
+                            <button class="key" onclick="calcInput('.')">.</button>
+                            
+                            <!-- 第六行 -->
+                            <button class="key" onclick="calcInput('^')">^</button>
+                            <button class="key special" onclick="calcInput('exp(')">exp</button>
+                            <button class="key special" onclick="calcInput('round(')">round</button>
+                            <button class="key operation" onclick="calcCalculate()" style="background: #ff4757; grid-column: span 3;">=</button>
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-title">方程求解器</div>
+                        <div class="input-group">
+                            <label>方程:</label>
+                            <input type="text" id="equationInput" placeholder="例如: x^2 - 4 = 0" style="flex: 2;">
+                        </div>
+                        <div class="input-group">
+                            <label>变量:</label>
+                            <input type="text" id="equationVar" placeholder="x" value="x" style="flex: 1;">
+                            <button onclick="solveEquationAdvanced()" class="btn-primary">求解</button>
+                        </div>
+                        <div class="input-group">
+                            <label>求解范围:</label>
+                            <input type="number" id="solveMin" placeholder="最小" value="-10" step="1">
+                            <span>到</span>
+                            <input type="number" id="solveMax" placeholder="最大" value="10" step="1">
+                        </div>
+                        <div id="equationResults" class="analysis-result" style="margin-top: 15px;"></div>
+                    </div>
+                </div>
+                
+                <div class="graph-container">
+                    <div class="section">
+                        <div class="section-title">计算历史</div>
+                        <div id="calcHistory" style="max-height: 300px; overflow-y: auto; padding: 10px; background: #f8f9fa; border-radius: 5px;">
+                            <!-- 计算历史将显示在这里 -->
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-title">精确值显示</div>
+                        <div class="analysis-result">
+                            <p><strong>π</strong> = π ≈ 3.141592653589793</p>
+                            <p><strong>e</strong> = e ≈ 2.718281828459045</p>
+                            <p><strong>√2</strong> = √2 ≈ 1.414213562373095</p>
+                            <p><strong>√3</strong> = √3 ≈ 1.732050807568877</p>
+                            <p><strong>黄金比例 φ</strong> = (1+√5)/2 ≈ 1.618033988749895</p>
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-title">常用函数</div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                            <button onclick="loadExampleToCalc('sin(x)')" class="btn-secondary">sin(x)</button>
+                            <button onclick="loadExampleToCalc('cos(x)')" class="btn-secondary">cos(x)</button>
+                            <button onclick="loadExampleToCalc('x^2 + 2*x + 1')" class="btn-secondary">二次函数</button>
+                            <button onclick="loadExampleToCalc('floor(x)')" class="btn-secondary">取整函数</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 比大小页面 -->
+        <div id="comparison-tab" class="tab-content">
+            <div class="main-content">
+                <div class="control-panel">
+                    <div class="section">
+                        <div class="section-title">表达式比较</div>
+                        
+                        <div class="comparison-inputs">
+                            <div>
+                                <h4 style="margin-bottom: 10px; color: #4facfe;">表达式 A</h4>
+                                <div class="function-display" id="exprADisplay">输入表达式</div>
+                                <div class="keyboard" style="grid-template-columns: repeat(4, 1fr); margin-top: 10px;">
+                                    <button class="key" onclick="addToComparison('A', '1')">1</button>
+                                    <button class="key" onclick="addToComparison('A', '2')">2</button>
+                                    <button class="key" onclick="addToComparison('A', '3')">3</button>
+                                    <button class="key operation" onclick="addToComparison('A', '+')">+</button>
+                                    <button class="key" onclick="addToComparison('A', '4')">4</button>
+                                    <button class="key" onclick="addToComparison('A', '5')">5</button>
+                                    <button class="key" onclick="addToComparison('A', '6')">6</button>
+                                    <button class="key operation" onclick="addToComparison('A', '-')">-</button>
+                                    <button class="key" onclick="addToComparison('A', '7')">7</button>
+                                    <button class="key" onclick="addToComparison('A', '8')">8</button>
+                                    <button class="key" onclick="addToComparison('A', '9')">9</button>
+                                    <button class="key operation" onclick="addToComparison('A', '*')">×</button>
+                                    <button class="key" onclick="addToComparison('A', '0')">0</button>
+                                    <button class="key" onclick="addToComparison('A', '(')">(</button>
+                                    <button class="key" onclick="addToComparison('A', ')')">)</button>
+                                    <button class="key operation" onclick="addToComparison('A', '/')">÷</button>
+                                </div>
+                                <div style="display: flex; gap: 10px; margin-top: 15px;">
+                                    <button onclick="clearComparison('A')" class="btn-secondary">清空A</button>
+                                    <button onclick="addToComparison('A', 'x')" class="btn-secondary">变量x</button>
+                                    <button onclick="addToComparison('A', 'sin(')" class="btn-secondary">sin</button>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <h4 style="margin-bottom: 10px; color: #f093fb;">表达式 B</h4>
+                                <div class="function-display" id="exprBDisplay">输入表达式</div>
+                                <div class="keyboard" style="grid-template-columns: repeat(4, 1fr); margin-top: 10px;">
+                                    <button class="key" onclick="addToComparison('B', '1')">1</button>
+                                    <button class="key" onclick="addToComparison('B', '2')">2</button>
+                                    <button class="key" onclick="addToComparison('B', '3')">3</button>
+                                    <button class="key operation" onclick="addToComparison('B', '+')">+</button>
+                                    <button class="key" onclick="addToComparison('B', '4')">4</button>
+                                    <button class="key" onclick="addToComparison('B', '5')">5</button>
+                                    <button class="key" onclick="addToComparison('B', '6')">6</button>
+                                    <button class="key operation" onclick="addToComparison('B', '-')">-</button>
+                                    <button class="key" onclick="addToComparison('B', '7')">7</button>
+                                    <button class="key" onclick="addToComparison('B', '8')">8</button>
+                                    <button class="key" onclick="addToComparison('B', '9')">9</button>
+                                    <button class="key operation" onclick="addToComparison('B', '*')">×</button>
+                                    <button class="key" onclick="addToComparison('B', '0')">0</button>
+                                    <button class="key" onclick="addToComparison('B', '(')">(</button>
+                                    <button class="key" onclick="addToComparison('B', ')')">)</button>
+                                    <button class="key operation" onclick="addToComparison('B', '/')">÷</button>
+                                </div>
+                                <div style="display: flex; gap: 10px; margin-top: 15px;">
+                                    <button onclick="clearComparison('B')" class="btn-secondary">清空B</button>
+                                    <button onclick="addToComparison('B', 'x')" class="btn-secondary">变量x</button>
+                                    <button onclick="addToComparison('B', 'cos(')" class="btn-secondary">cos</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-title">比较参数设置</div>
+                        <div class="input-group">
+                            <label>变量范围:</label>
+                            <input type="number" id="compXMin" placeholder="最小" value="-5" step="0.1">
+                            <span>到</span>
+                            <input type="number" id="compXMax" placeholder="最大" value="5" step="0.1">
+                        </div>
+                        <div class="input-group">
+                            <label>比较类型:</label>
+                            <select id="compType" style="flex: 1;">
+                                <option value="numeric">数值比较</option>
+                                <option value="function">函数比较</option>
+                                <option value="algebraic">代数比较</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label>显示精度:</label>
+                            <select id="precision" style="flex: 1;">
+                                <option value="exact">精确值</option>
+                                <option value="decimal4">4位小数</option>
+                                <option value="decimal2">2位小数</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; gap: 10px; margin-top: 20px;">
+                        <button onclick="compareExpressions()" class="btn-primary">比较大小</button>
+                        <button onclick="plotComparison()" class="btn-secondary">绘制比较图</button>
+                        <button onclick="analyzeInequality()" class="btn-secondary">不等式分析</button>
+                    </div>
+                </div>
+                
+                <div class="graph-container">
+                    <h3>比较结果可视化</h3>
+                    <canvas id="comparisonCanvas" style="height: 400px;"></canvas>
+                    
+                    <div class="analysis-panel">
+                        <div class="section-title">比较结果分析</div>
+                        <div id="comparisonResult">
+                            <div class="analysis-result">
+                                <p>请输入两个表达式并点击"比较大小"</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 多函数分析页面 -->
+        <div id="multi-function-tab" class="tab-content">
+            <div class="main-content">
+                <div class="control-panel">
+                    <div class="section">
+                        <div class="section-title">多函数管理</div>
+                        <div class="function-list" id="multiFunctionList">
+                            <!-- 函数列表将动态生成 -->
+                        </div>
+                        <div class="multi-function-controls">
+                            <button onclick="addNewFunction()" class="btn-secondary">添加函数</button>
+                            <button onclick="clearAllFunctions()" class="btn-secondary">清空所有</button>
+                            <button onclick="findAllIntersections()" class="btn-primary">求所有交点</button>
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-title">交点分析结果</div>
+                        <div id="intersectionResults" class="analysis-result">
+                            <p>选择两个函数进行交点分析</p>
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <div class="section-title">函数属性</div>
+                        <div id="functionProperties">
+                            <!-- 函数属性将动态生成 -->
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="graph-container">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <h3 style="margin: 0;">多函数图像对比</h3>
+                        <button onclick="plotAllFunctions()" class="btn-secondary">重新绘制</button>
+                    </div>
+                    <canvas id="multiFunctionCanvas"></canvas>
+                    
+                    <div class="analysis-panel">
+                        <div class="section-title">综合分析</div>
+                        <div id="multiAnalysisResults">
+                            <div class="analysis-result">
+                                <p>添加多个函数进行对比分析</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==================== 全局变量和配置 ====================
+        let currentTab = 'function';
+        let currentExpression = "";
+        let functionsList = [];
+        let multiFunctions = [];
+        let activeFunctions = [];
+        let scaleXMin = -10, scaleXMax = 10;
+        let scaleYMin = -10, scaleYMax = 10;
+        let ctx, canvas;
+        let multiCtx, multiCanvas;
+        let comparisonCtx, comparisonCanvas;
+        
+        // 画布交互状态
+        let isDragging = false;
+        let dragStartX = 0, dragStartY = 0;
+        let offsetX = 0, offsetY = 0;
+        let zoomLevel = 1;
+        let dataUpdateInterval = null;
+        
+        // 采样密度
+        let samplingFactor = 5;
+        
+        // 精确值表达式映射
+        const exactValueMap = {
+            '3.141592653589793': 'π',
+            '2.718281828459045': 'e',
+            '1.414213562373095': '√2',
+            '1.732050807568877': '√3',
+            '0.7853981633974483': 'π/4',
+            '1.5707963267948966': 'π/2',
+            '0.5235987755982988': 'π/6'
+        };
+        
+        // 特殊值的精确表示
+        const specialValues = {
+            'π': Math.PI,
+            'e': Math.E,
+            '√2': Math.SQRT2,
+            '√3': Math.sqrt(3),
+            '√5': Math.sqrt(5),
+            'φ': (1 + Math.sqrt(5)) / 2
+        };
+        
+        // 函数颜色池
+        const functionColors = [
+            '#ff4757', '#3742fa', '#2ed573', '#ffa502', '#ff6b81',
+            '#5352ed', '#70a1ff', '#7bed9f', '#eccc68', '#ff7f50',
+            '#7158e2', '#18dcff', '#32ff7e', '#fff200', '#c56cf0'
+        ];
+        
+        // ==================== 初始化函数 ====================
+        window.onload = function() {
+            // 初始化所有画布
+            initCanvas('graphCanvas');
+            initCanvas('multiFunctionCanvas');
+            initCanvas('comparisonCanvas');
+            
+            // 设置事件监听器
+            setupEventListeners();
+            
+            // 加载初始函数
+            currentExpression = "sin(x)";
+            updateFunctionDisplay();
+            
+            // 初始化多函数列表
+            updateMultiFunctionList();
+            
+            // 绘制初始图像
+            plotFunction();
+        };
+        
+        function initCanvas(canvasId) {
+            const canvasElement = document.getElementById(canvasId);
+            if (canvasId === 'graphCanvas') {
+                ctx = canvasElement.getContext('2d');
+                canvas = canvasElement;
+            } else if (canvasId === 'multiFunctionCanvas') {
+                multiCtx = canvasElement.getContext('2d');
+                multiCanvas = canvasElement;
+            } else if (canvasId === 'comparisonCanvas') {
+                comparisonCtx = canvasElement.getContext('2d');
+                comparisonCanvas = canvasElement;
+            }
+            
+            // 设置画布大小
+            resizeCanvas(canvasElement);
+            
+            // 窗口大小变化时重新调整画布
+            window.addEventListener('resize', () => {
+                resizeCanvas(canvasElement);
+                if (canvasId === 'graphCanvas') plotFunction();
+                else if (canvasId === 'multiFunctionCanvas') plotAllFunctions();
+                else if (canvasId === 'comparisonCanvas') plotComparison();
+            });
+        }
+        
+        function resizeCanvas(canvasElement) {
+            const container = canvasElement.parentElement;
+            const displayWidth = container.clientWidth;
+            const displayHeight = canvasElement.id.includes('multi') ? 500 : 400;
+            
+            canvasElement.width = displayWidth;
+            canvasElement.height = displayHeight;
+            
+            // 设置高分辨率显示
+            const dpr = window.devicePixelRatio || 1;
+            canvasElement.width = displayWidth * dpr;
+            canvasElement.height = displayHeight * dpr;
+            
+            const context = canvasElement.getContext('2d');
+            context.scale(dpr, dpr);
+            canvasElement.style.width = displayWidth + 'px';
+            canvasElement.style.height = displayHeight + 'px';
+        }
+        
+        function setupEventListeners() {
+            // 单函数画布事件
+            setupCanvasEvents(canvas, ctx, 'single');
+            
+            // 多函数画布事件
+            setupCanvasEvents(multiCanvas, multiCtx, 'multi');
+            
+            // 比较画布事件
+            setupCanvasEvents(comparisonCanvas, comparisonCtx, 'comparison');
+            
+            // 键盘快捷键
+            document.addEventListener('keydown', handleKeyboardShortcuts);
+            
+            // 坐标系输入框事件
+            document.getElementById('xMin').addEventListener('change', updateScale);
+            document.getElementById('xMax').addEventListener('change', updateScale);
+            document.getElementById('yMin').addEventListener('change', updateScale);
+            document.getElementById('yMax').addEventListener('change', updateScale);
+        }
+        
+        function setupCanvasEvents(canvasElement, context, type) {
+            if (!canvasElement) return;
+            
+            canvasElement.addEventListener('mousedown', function(e) {
+                isDragging = true;
+                dragStartX = e.clientX - offsetX;
+                dragStartY = e.clientY - offsetY;
+                canvasElement.style.cursor = 'grabbing';
+            });
+            
+            canvasElement.addEventListener('mousemove', function(e) {
+                const rect = canvasElement.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                // 更新坐标显示
+                updateCoordinateDisplay(x, y, canvasElement, type);
+                
+                // 拖动处理
+                if (isDragging) {
+                    offsetX = e.clientX - dragStartX;
+                    offsetY = e.clientY - dragStartY;
+                    
+                    if (type === 'single') plotFunction();
+                    else if (type === 'multi') plotAllFunctions();
+                    else if (type === 'comparison') plotComparison();
+                }
+            });
+            
+            canvasElement.addEventListener('mouseup', function() {
+                isDragging = false;
+                canvasElement.style.cursor = 'crosshair';
+            });
+            
+            canvasElement.addEventListener('wheel', function(e) {
+                e.preventDefault();
+                const zoomFactor = e.deltaY > 0 ? 0.9 : 1.1;
+                zoomLevel *= zoomFactor;
+                zoomLevel = Math.max(0.1, Math.min(zoomLevel, 10));
+                
+                if (type === 'single') plotFunction();
+                else if (type === 'multi') plotAllFunctions();
+                else if (type === 'comparison') plotComparison();
+            });
+        }
+        
+        function updateCoordinateDisplay(screenX, screenY, canvasElement, type) {
+            // 将屏幕坐标转换为数学坐标
+            const mathX = (screenX - canvasElement.width/2 - offsetX) * (scaleXMax - scaleXMin) / (canvasElement.width * zoomLevel);
+            const mathY = -(screenY - canvasElement.height/2 - offsetY) * (scaleYMax - scaleYMin) / (canvasElement.height * zoomLevel);
+            
+            let displayElement;
+            if (type === 'single') displayElement = document.getElementById('coordinateDisplay');
+            else if (type === 'multi') return; // 多函数页面暂时不显示坐标
+            
+            if (displayElement) {
+                displayElement.textContent = `坐标: (${formatNumber(mathX)}, ${formatNumber(mathY)})`;
+            }
+            
+            // 更新数据面板
+            updateDataPanel(mathX, mathY, type);
+        }
+        
+        function updateDataPanel(mathX, mathY, type) {
+            let dataPanel, dataContent;
+            
+            if (type === 'single') {
+                dataPanel = document.getElementById('dataPanel');
+                dataContent = document.getElementById('dataContent');
+                
+                if (!currentExpression) return;
+                
+                try {
+                    const func = parseExpression(currentExpression);
+                    const yValue = func(mathX);
+                    const diff = Math.abs(mathY - yValue);
+                    
+                    dataContent.innerHTML = `
+                        <div class="data-row">
+                            <span>X:</span>
+                            <span class="exact-value">${formatExactValue(mathX)}</span>
+                        </div>
+                        <div class="data-row">
+                            <span>Y:</span>
+                            <span class="exact-value">${formatExactValue(mathY)}</span>
+                        </div>
+                        <div class="data-row">
+                            <span>f(X):</span>
+                            <span class="exact-value">${formatExactValue(yValue)}</span>
+                        </div>
+                        <div class="data-row">
+                            <span>差值:</span>
+                            <span>${formatNumber(diff)}</span>
+                        </div>
+                    `;
+                    
+                    dataPanel.style.display = 'block';
+                } catch (error) {
+                    dataPanel.style.display = 'none';
+                }
+            }
+        }
+        
+        function handleKeyboardShortcuts(e) {
+            // 防止在输入框中触发
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+            
+            switch(e.key) {
+                case 'Escape':
+                    resetView();
+                    break;
+                case 'Enter':
+                    if (e.ctrlKey) {
+                        e.preventDefault();
+                        if (currentTab === 'function') plotFunction();
+                        else if (currentTab === 'calculator') calcCalculate();
+                        else if (currentTab === 'comparison') compareExpressions();
+                    }
+                    break;
+                case 'Backspace':
+                    if (currentTab === 'function') removeLast();
+                    else if (currentTab === 'calculator') calcBackspace();
+                    break;
+                case 'r':
+                case 'R':
+                    if (e.ctrlKey) {
+                        e.preventDefault();
+                        resetView();
+                    }
+                    break;
+            }
+        }
+        
+        // ==================== 页面切换 ====================
+        function switchTab(tabName) {
+            currentTab = tabName;
+            
+            // 更新标签页样式
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // 激活当前标签页
+            event.target.classList.add('active');
+            document.getElementById(tabName + '-tab').classList.add('active');
+            
+            // 重置画布大小
+            setTimeout(() => {
+                if (tabName === 'function' && canvas) {
+                    resizeCanvas(canvas);
+                    plotFunction();
+                } else if (tabName === 'multi-function' && multiCanvas) {
+                    resizeCanvas(multiCanvas);
+                    plotAllFunctions();
+                } else if (tabName === 'comparison' && comparisonCanvas) {
+                    resizeCanvas(comparisonCanvas);
+                }
+            }, 100);
+        }
+        
+        // ==================== 函数表达式处理 ====================
+        function addToExpression(value) {
+            currentExpression += value;
+            updateFunctionDisplay();
+        }
+        
+        function clearExpression() {
+            currentExpression = "";
+            updateFunctionDisplay();
+        }
+        
+        function removeLast() {
+            currentExpression = currentExpression.slice(0, -1);
+            updateFunctionDisplay();
+        }
+        
+        function updateFunctionDisplay() {
+            const display = document.getElementById('functionText');
+            display.innerHTML = `y = ${currentExpression || ' '}`;
+        }
+        
+        function loadExample(type) {
+            switch(type) {
+                case 'sin':
+                    currentExpression = "sin(x)";
+                    break;
+                case 'gauss':
+                    currentExpression = "exp(-x^2/2)/sqrt(2*pi)";
+                    break;
+                case 'floor':
+                    currentExpression = "floor(x) + sin(x)";
+                    break;
+                case 'quadratic':
+                    currentExpression = "x^2 - 4*x + 3";
+                    break;
+            }
+            updateFunctionDisplay();
+            plotFunction();
+        }
+        
+        function updateScale() {
+            scaleXMin = parseFloat(document.getElementById('xMin').value) || -10;
+            scaleXMax = parseFloat(document.getElementById('xMax').value) || 10;
+            scaleYMin = parseFloat(document.getElementById('yMin').value) || -10;
+            scaleYMax = parseFloat(document.getElementById('yMax').value) || 10;
+            
+            if (scaleXMin >= scaleXMax) {
+                showError("X轴最小值必须小于最大值");
+                return;
+            }
+            if (scaleYMin >= scaleYMax) {
+                showError("Y轴最小值必须小于最大值");
+                return;
+            }
+            
+            plotFunction();
+        }
+        
+        function updateDensityValue() {
+            const densitySlider = document.getElementById('samplingDensity');
+            const densityValue = document.getElementById('densityValue');
+            samplingFactor = parseInt(densitySlider.value);
+            
+            const labels = ['很低', '低', '中低', '中', '中高', '高', '很高', '极高', '超高', '极限'];
+            densityValue.textContent = labels[samplingFactor - 1] || '中';
+        }
+        
+        // ==================== 表达式解析器 ====================
+        function parseExpression(expr) {
+            return function(x) {
+                try {
+                    let processedExpr = expr
+                        .replace(/pi/g, 'Math.PI')
+                        .replace(/e/g, 'Math.E')
+                        .replace(/\^/g, '**');
+                    
+                    // 处理特殊函数
+                    processedExpr = processedExpr
+                        .replace(/sin\(/g, 'Math.sin(')
+                        .replace(/cos\(/g, 'Math.cos(')
+                        .replace(/tan\(/g, 'Math.tan(')
+                        .replace(/log\(/g, 'Math.log10(')
+                        .replace(/ln\(/g, 'Math.log(')
+                        .replace(/sqrt\(/g, 'Math.sqrt(')
+                        .replace(/abs\(/g, 'Math.abs(')
+                        .replace(/exp\(/g, 'Math.exp(')
+                        .replace(/floor\(/g, 'Math.floor(')
+                        .replace(/ceil\(/g, 'Math.ceil(')
+                        .replace(/round\(/g, 'Math.round(');
+                    
+                    // 替换变量x
+                    processedExpr = processedExpr.replace(/x/g, `(${x})`);
+                    
+                    // 安全计算
+                    return eval(processedExpr);
+                } catch (error) {
+                    console.error('表达式解析错误:', error);
+                    return NaN;
+                }
+            };
+        }
+        
+        // ==================== 函数图像绘制 ====================
+        function plotFunction() {
+            if (!currentExpression) {
+                showError("请输入函数表达式");
+                return;
+            }
+            
+            try {
+                // 清空画布
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                // 计算实际绘制区域
+                const plotWidth = canvas.width;
+                const plotHeight = canvas.height;
+                
+                // 保存画布状态
+                ctx.save();
+                
+                // 应用变换
+                ctx.translate(plotWidth/2 + offsetX, plotHeight/2 + offsetY);
+                ctx.scale(zoomLevel, zoomLevel);
+                
+                // 绘制坐标系
+                drawCoordinateSystem(ctx, plotWidth, plotHeight);
+                
+                // 绘制函数
+                const func = parseExpression(currentExpression);
+                ctx.beginPath();
+                ctx.strokeStyle = '#ff4757';
+                ctx.lineWidth = 2;
+                ctx.lineJoin = 'round';
+                ctx.lineCap = 'round';
+                
+                const xRange = scaleXMax - scaleXMin;
+                const pixelWidth = plotWidth * zoomLevel;
+                const step = xRange / (pixelWidth / samplingFactor);
+                
+                let firstPoint = true;
+                let lastValidPoint = null;
+                
+                for (let mathX = scaleXMin; mathX <= scaleXMax; mathX += step) {
+                    try {
+                        const mathY = func(mathX);
+                        
+                        if (!isFinite(mathY) || Math.abs(mathY) > 1e10) {
+                            firstPoint = true;
+                            lastValidPoint = null;
+                            continue;
+                        }
+                        
+                        // 转换为屏幕坐标
+                        const screenX = (mathX - scaleXMin) / xRange * plotWidth - plotWidth/2;
+                        const screenY = -((mathY - scaleYMin) / (scaleYMax - scaleYMin) * plotHeight - plotHeight/2);
+                        
+                        // 检查是否在合理范围内
+                        if (Math.abs(screenY) > plotHeight * 10) {
+                            firstPoint = true;
+                            lastValidPoint = null;
+                            continue;
+                        }
+                        
+                        if (firstPoint) {
+                            ctx.moveTo(screenX, screenY);
+                            firstPoint = false;
+                        } else {
+                            // 检查连续性
+                            if (lastValidPoint && Math.abs(screenY - lastValidPoint.y) < plotHeight * 2) {
+                                ctx.lineTo(screenX, screenY);
+                            } else {
+                                ctx.moveTo(screenX, screenY);
+                            }
+                        }
+                        
+                        lastValidPoint = {x: screenX, y: screenY};
+                        
+                    } catch (error) {
+                        firstPoint = true;
+                        lastValidPoint = null;
+                    }
+                }
+                
+                ctx.stroke();
+                ctx.restore();
+                
+                hideError();
+                
+            } catch (error) {
+                showError("绘制错误: " + error.message);
+                console.error(error);
+            }
+        }
+        
+        function drawCoordinateSystem(context, width, height) {
+            const xRange = scaleXMax - scaleXMin;
+            const yRange = scaleYMax - scaleYMin;
+            
+            // 绘制网格
+            context.strokeStyle = '#e8e8e8';
+            context.lineWidth = 1;
+            
+            // 计算网格间隔
+            const xGridStep = calculateGridStep(xRange, width);
+            const yGridStep = calculateGridStep(yRange, height);
+            
+            // 垂直网格线
+            for (let x = Math.ceil(scaleXMin/xGridStep)*xGridStep; x <= scaleXMax; x += xGridStep) {
+                const screenX = (x - scaleXMin) / xRange * width - width/2;
+                context.beginPath();
+                context.moveTo(screenX, -height/2);
+                context.lineTo(screenX, height/2);
+                context.stroke();
+                
+                // 刻度标签
+                if (Math.abs(x) > xGridStep/100) {
+                    context.fillStyle = '#666';
+                    context.font = '12px Arial';
+                    context.textAlign = 'center';
+                    context.fillText(formatExactValue(x), screenX, height/2 + 15);
+                }
+            }
+            
+            // 水平网格线
+            for (let y = Math.ceil(scaleYMin/yGridStep)*yGridStep; y <= scaleYMax; y += yGridStep) {
+                const screenY = -((y - scaleYMin) / yRange * height - height/2);
+                context.beginPath();
+                context.moveTo(-width/2, screenY);
+                context.lineTo(width/2, screenY);
+                context.stroke();
+                
+                // 刻度标签
+                if (Math.abs(y) > yGridStep/100) {
+                    context.fillStyle = '#666';
+                    context.font = '12px Arial';
+                    context.textAlign = 'right';
+                    context.fillText(formatExactValue(y), -width/2 + 5, screenY + 4);
+                }
+            }
+            
+            // 绘制坐标轴
+            context.strokeStyle = '#333';
+            context.lineWidth = 2;
+            
+            // X轴
+            context.beginPath();
+            context.moveTo(-width/2, 0);
+            context.lineTo(width/2, 0);
+            context.stroke();
+            
+            // Y轴
+            context.beginPath();
+            context.moveTo(0, -height/2);
+            context.lineTo(0, height/2);
+            context.stroke();
+            
+            // 坐标轴标签
+            context.fillStyle = '#333';
+            context.font = '14px Arial';
+            context.textAlign = 'right';
+            context.fillText('X', width/2 - 5, 15);
+            context.fillText('Y', -5, -height/2 + 20);
+        }
+        
+        function calculateGridStep(range, size) {
+            const approximateSteps = size / 80; // 每80像素一条网格线
+            const rawStep = range / approximateSteps;
+            const magnitude = Math.pow(10, Math.floor(Math.log10(rawStep)));
+            const normalized = rawStep / magnitude;
+            
+            if (normalized < 2) return magnitude;
+            if (normalized < 5) return 2 * magnitude;
+            return 5 * magnitude;
+        }
+        
+        // ==================== 函数分析工具 ====================
+        function clearAnalysisResults() {
+            document.getElementById('analysisResults').innerHTML = '';
+        }
+        
+        function addPermanentAnalysisResult(title, content) {
+            const resultsDiv = document.getElementById('analysisResults');
+            const resultDiv = document.createElement('div');
+            resultDiv.className = 'analysis-result permanent';
+            resultDiv.innerHTML = `
+                <h4>${title}</h4>
+                <div class="symbolic-result">${content}</div>
+            `;
+            resultsDiv.appendChild(resultDiv);
+            
+            // 滚动到最新结果
+            resultsDiv.scrollTop = resultsDiv.scrollHeight;
+        }
+        
+        function calculateRange() {
+            const minX = parseFloat(document.getElementById('analyzeMin').value) || scaleXMin;
+            const maxX = parseFloat(document.getElementById('analyzeMax').value) || scaleXMax;
+            
+            if (!currentExpression) {
+                showError("请输入函数表达式");
+                return;
+            }
+            
+            try {
+                const func = parseExpression(currentExpression);
+                const step = (maxX - minX) / 500;
+                let minY = Infinity;
+                let maxY = -Infinity;
+                
+                for (let x = minX; x <= maxX; x += step) {
+                    try {
+                        const y = func(x);
+                        if (isFinite(y)) {
+                            minY = Math.min(minY, y);
+                            maxY = Math.max(maxY, y);
+                        }
+                    } catch (error) {
+                        continue;
+                    }
+                }
+                
+                if (minY === Infinity || maxY === -Infinity) {
+                    addPermanentAnalysisResult("值域分析", "在指定区间内未找到有效的函数值");
+                    return;
+                }
+                
+                const exactMin = findExactRepresentation(minY);
+                const exactMax = findExactRepresentation(maxY);
+                
+                let result = `在区间 [${formatExactValue(minX)}, ${formatExactValue(maxX)}] 上：<br>`;
+                result += `最小值: ${exactMin} ≈ ${formatNumber(minY)}<br>`;
+                result += `最大值: ${exactMax} ≈ ${formatNumber(maxY)}<br>`;
+                result += `值域: [${exactMin}, ${exactMax}]`;
+                
+                addPermanentAnalysisResult("值域分析", result);
+                
+            } catch (error) {
+                showError("计算值域错误: " + error.message);
+            }
+        }
+        
+        function findRoots() {
+            if (!currentExpression) {
+                showError("请输入函数表达式");
+                return;
+            }
+            
+            try {
+                const func = parseExpression(currentExpression);
+                const minX = parseFloat(document.getElementById('analyzeMin').value) || scaleXMin;
+                const maxX = parseFloat(document.getElementById('analyzeMax').value) || scaleXMax;
+                
+                const roots = findFunctionRoots(func, minX, maxX);
+                
+                if (roots.length === 0) {
+                    addPermanentAnalysisResult("零点分析", "在指定区间内未找到零点");
+                    return;
+                }
+                
+                let result = `在区间 [${formatExactValue(minX)}, ${formatExactValue(maxX)}] 上找到 ${roots.length} 个零点：<br>`;
+                
+                roots.forEach((root, i) => {
+                    const exactRoot = findExactRepresentation(root);
+                    result += `零点 ${i+1}: x = ${exactRoot} ≈ ${formatNumber(root)}<br>`;
+                });
+                
+                addPermanentAnalysisResult("零点分析", result);
+                
+            } catch (error) {
+                showError("求零点错误: " + error.message);
+            }
+        }
+        
+        function findFunctionRoots(func, minX, maxX) {
+            const roots = [];
+            const step = (maxX - minX) / 100;
+            
+            for (let x = minX; x < maxX; x += step) {
+                try {
+                    const y1 = func(x);
+                    const y2 = func(x + step);
+                    
+                    if (isFinite(y1) && isFinite(y2) && y1 * y2 <= 0) {
+                        const root = findRootBisection(func, x, x + step);
+                        // 避免重复的根
+                        if (!roots.some(r => Math.abs(r - root) < step/10)) {
+                            roots.push(root);
+                        }
+                    }
+                } catch (error) {
+                    continue;
+                }
+            }
+            
+            return roots;
+        }
+        
+        function findRootBisection(func, a, b, tolerance = 1e-12, maxIterations = 100) {
+            let fa = func(a);
+            let fb = func(b);
+            
+            if (Math.abs(fa) < tolerance) return a;
+            if (Math.abs(fb) < tolerance) return b;
+            
+            if (fa * fb > 0) {
+                // 没有根或者有偶数个根，返回中点
+                return (a + b) / 2;
+            }
+            
+            for (let i = 0; i < maxIterations; i++) {
+                const mid = (a + b) / 2;
+                const fmid = func(mid);
+                
+                if (Math.abs(fmid) < tolerance || (b - a) / 2 < tolerance) {
+                    return mid;
+                }
+                
+                if (fa * fmid < 0) {
+                    b = mid;
+                    fb = fmid;
+                } else {
+                    a = mid;
+                    fa = fmid;
+                }
+            }
+            
+            return (a + b) / 2;
+        }
+        
+        function findExtrema() {
+            if (!currentExpression) {
+                showError("请输入函数表达式");
+                return;
+            }
+            
+            try {
+                const func = parseExpression(currentExpression);
+                const minX = parseFloat(document.getElementById('analyzeMin').value) || scaleXMin;
+                const maxX = parseFloat(document.getElementById('analyzeMax').value) || scaleXMax;
+                
+                const extrema = findFunctionExtrema(func, minX, maxX);
+                
+                if (extrema.length === 0) {
+                    addPermanentAnalysisResult("极值点分析", "在指定区间内未找到极值点");
+                    return;
+                }
+                
+                let result = `在区间 [${formatExactValue(minX)}, ${formatExactValue(maxX)}] 上找到 ${extrema.length} 个极值点：<br>`;
+                
+                extrema.forEach((point, i) => {
+                    const exactX = findExactRepresentation(point.x);
+                    const exactY = findExactRepresentation(point.y);
+                    const typeStr = point.type === 'max' ? '极大值点' : '极小值点';
+                    result += `${typeStr} ${i+1}: (${exactX}, ${exactY}) ≈ (${formatNumber(point.x)}, ${formatNumber(point.y)})<br>`;
+                });
+                
+                addPermanentAnalysisResult("极值点分析", result);
+                
+            } catch (error) {
+                showError("求极值错误: " + error.message);
+            }
+        }
+        
+        function findFunctionExtrema(func, minX, maxX) {
+            const extrema = [];
+            const step = (maxX - minX) / 200;
+            
+            for (let x = minX + step; x < maxX - step; x += step) {
+                try {
+                    const y0 = func(x - step);
+                    const y1 = func(x);
+                    const y2 = func(x + step);
+                    
+                    if (!isFinite(y0) || !isFinite(y1) || !isFinite(y2)) {
+                        continue;
+                    }
+                    
+                    // 寻找极值点
+                    if ((y1 > y0 && y1 > y2) || (y1 < y0 && y1 < y2)) {
+                        // 使用二次插值精确化极值点
+                        const exactX = x + step * (y0 - y2) / (2 * (y0 - 2*y1 + y2));
+                        const exactY = func(exactX);
+                        
+                        if (isFinite(exactY)) {
+                            extrema.push({
+                                x: exactX,
+                                y: exactY,
+                                type: y1 > y0 ? 'max' : 'min'
+                            });
+                        }
+                    }
+                } catch (error) {
+                    continue;
+                }
+            }
+            
+            return extrema;
+        }
+        
+        function analyzeSymmetry() {
+            if (!currentExpression) {
+                showError("请输入函数表达式");
+                return;
+            }
+            
+            try {
+                const func = parseExpression(currentExpression);
+                const symmetry = analyzeFunctionSymmetry(func);
+                
+                addPermanentAnalysisResult("对称性分析", symmetry);
+                
+            } catch (error) {
+                showError("对称性分析错误: " + error.message);
+            }
+        }
+        
+        function analyzeFunctionSymmetry(func) {
+            // 检查奇偶性
+            let isEven = true;
+            let isOdd = true;
+            
+            const testPoints = [0.5, 1, 1.5, 2, 2.5];
+            
+            for (const x of testPoints) {
+                try {
+                    const f_x = func(x);
+                    const f_negx = func(-x);
+                    
+                    if (Math.abs(f_x - f_negx) > 1e-10) isEven = false;
+                    if (Math.abs(f_x + f_negx) > 1e-10) isOdd = false;
+                } catch (error) {
+                    continue;
+                }
+            }
+            
+            if (isEven) {
+                return "函数为偶函数，关于Y轴对称：f(-x) = f(x)<br>对称轴方程: x = 0";
+            }
+            if (isOdd) {
+                return "函数为奇函数，关于原点对称：f(-x) = -f(x)<br>对称中心: (0, 0)";
+            }
+            
+            // 检查周期性对称
+            const period = detectPeriodicity(func);
+            if (period) {
+                const exactPeriod = findExactRepresentation(period);
+                return `函数为周期函数，周期 T = ${exactPeriod} ≈ ${formatNumber(period)}<br>对称轴方程: x = kT/2 (k∈Z)`;
+            }
+            
+            // 检查轴对称（关于直线 x = a）
+            const axis = findSymmetryAxis(func);
+            if (axis !== null) {
+                const exactAxis = findExactRepresentation(axis);
+                return `函数关于直线 x = ${exactAxis} ≈ ${formatNumber(axis)} 对称<br>对称轴方程: x = ${exactAxis}`;
+            }
+            
+            return "函数无明显对称性";
+        }
+        
+        function detectPeriodicity(func) {
+            // 简单的周期检测算法
+            const testValues = [];
+            for (let x = 0; x <= 10; x += 0.1) {
+                try {
+                    testValues.push(func(x));
+                } catch (error) {
+                    continue;
+                }
+            }
+            
+            // 寻找最小正周期
+            for (let period = 0.1; period <= 5; period += 0.1) {
+                let isPeriodic = true;
+                const periodSteps = Math.floor(period / 0.1);
+                
+                for (let i = 0; i < testValues.length - periodSteps; i++) {
+                    if (Math.abs(testValues[i] - testValues[i + periodSteps]) > 0.01) {
+                        isPeriodic = false;
+                        break;
+                    }
+                }
+                
+                if (isPeriodic && period > 0.2) {
+                    return period;
+                }
+            }
+            
+            return null;
+        }
+        
+        function findSymmetryAxis(func) {
+            // 寻找轴对称轴
+            const testPoints = [-2, -1, 0, 1, 2];
+            
+            for (let a = -5; a <= 5; a += 0.5) {
+                let isSymmetric = true;
+                
+                for (const x of testPoints) {
+                    try {
+                        const f1 = func(a + x);
+                        const f2 = func(a - x);
+                        
+                        if (Math.abs(f1 - f2) > 1e-6) {
+                            isSymmetric = false;
+                            break;
+                        }
+                    } catch (error) {
+                        isSymmetric = false;
+                        break;
+                    }
+                }
+                
+                if (isSymmetric) {
+                    return a;
+                }
+            }
+            
+            return null;
+        }
+        
+        function analyzeMonotonic() {
+            if (!currentExpression) {
+                showError("请输入函数表达式");
+                return;
+            }
+            
+            try {
+                const func = parseExpression(currentExpression);
+                const minX = parseFloat(document.getElementById('analyzeMin').value) || scaleXMin;
+                const maxX = parseFloat(document.getElementById('analyzeMax').value) || scaleXMax;
+                
+                const monotonicIntervals = findMonotonicIntervals(func, minX, maxX);
+                
+                if (monotonicIntervals.length === 0) {
+                    addPermanentAnalysisResult("单调区间分析", "在指定区间内无法确定单调性");
+                    return;
+                }
+                
+                let result = `在区间 [${formatExactValue(minX)}, ${formatExactValue(maxX)}] 上的单调区间：<br>`;
+                
+                monotonicIntervals.forEach((interval, i) => {
+                    const exactStart = findExactRepresentation(interval.start);
+                    const exactEnd = findExactRepresentation(interval.end);
+                    const typeStr = interval.type === 'increasing' ? '递增' : '递减';
+                    result += `区间 ${i+1}: [${exactStart}, ${exactEnd}] ≈ [${formatNumber(interval.start)}, ${formatNumber(interval.end)}] (${typeStr})<br>`;
+                });
+                
+                addPermanentAnalysisResult("单调区间分析", result);
+                
+            } catch (error) {
+                showError("单调性分析错误: " + error.message);
+            }
+        }
+        
+        function findMonotonicIntervals(func, minX, maxX) {
+            const intervals = [];
+            const step = (maxX - minX) / 200;
+            
+            let currentInterval = null;
+            let lastY = null;
+            let lastX = minX;
+            
+            for (let x = minX; x <= maxX; x += step) {
+                try {
+                    const y = func(x);
+                    
+                    if (!isFinite(y)) {
+                        if (currentInterval) {
+                            currentInterval.end = lastX;
+                            intervals.push(currentInterval);
+                            currentInterval = null;
+                        }
+                        continue;
+                    }
+                    
+                    if (lastY === null) {
+                        lastY = y;
+                        lastX = x;
+                        continue;
+                    }
+                    
+                    const isIncreasing = y > lastY;
+                    
+                    if (currentInterval === null) {
+                        currentInterval = {
+                            start: lastX,
+                            end: x,
+                            type: isIncreasing ? 'increasing' : 'decreasing'
+                        };
+                    } else if (currentInterval.type === (isIncreasing ? 'increasing' : 'decreasing')) {
+                        currentInterval.end = x;
+                    } else {
+                        // 单调性改变
+                        currentInterval.end = lastX;
+                        intervals.push(currentInterval);
+                        currentInterval = {
+                            start: lastX,
+                            end: x,
+                            type: isIncreasing ? 'increasing' : 'decreasing'
+                        };
+                    }
+                    
+                    lastY = y;
+                    lastX = x;
+                } catch (error) {
+                    if (currentInterval) {
+                        currentInterval.end = lastX;
+                        intervals.push(currentInterval);
+                        currentInterval = null;
+                    }
+                }
+            }
+            
+            if (currentInterval) {
+                currentInterval.end = maxX;
+                intervals.push(currentInterval);
+            }
+            
+            return intervals;
+        }
+        
+        function findIntersections() {
+            const lineExpr = document.getElementById('lineEquation').value;
+            if (!lineExpr || !currentExpression) {
+                showError("请输入函数和直线方程");
+                return;
+            }
+            
+            try {
+                // 解析直线方程
+                let lineFunc;
+                if (lineExpr.includes('y=')) {
+                    const expr = lineExpr.split('=')[1];
+                    lineFunc = parseExpression(expr);
+                } else {
+                    lineFunc = parseExpression(lineExpr);
+                }
+                
+                const func = parseExpression(currentExpression);
+                const minX = parseFloat(document.getElementById('analyzeMin').value) || scaleXMin;
+                const maxX = parseFloat(document.getElementById('analyzeMax').value) || scaleXMax;
+                
+                const intersections = findFunctionIntersections(func, lineFunc, minX, maxX);
+                
+                if (intersections.length === 0) {
+                    addPermanentAnalysisResult("交点分析", `函数与直线 ${lineExpr} 在指定区间内没有交点`);
+                    return;
+                }
+                
+                let result = `函数与直线 ${lineExpr} 的交点：<br>`;
+                
+                intersections.forEach((point, i) => {
+                    const exactX = findExactRepresentation(point.x);
+                    const exactY = findExactRepresentation(point.y);
+                    result += `交点 ${i+1}: (${exactX}, ${exactY}) ≈ (${formatNumber(point.x)}, ${formatNumber(point.y)})<br>`;
+                });
+                
+                addPermanentAnalysisResult("交点分析", result);
+                
+            } catch (error) {
+                showError("求交点错误: " + error.message);
+            }
+        }
+        
+        function findFunctionIntersections(func1, func2, minX, maxX) {
+            const intersections = [];
+            const step = (maxX - minX) / 200;
+            
+            for (let x = minX; x < maxX; x += step) {
+                try {
+                    const y1 = func1(x);
+                    const y2 = func2(x);
+                    const y1_next = func1(x + step);
+                    const y2_next = func2(x + step);
+                    
+                    if (!isFinite(y1) || !isFinite(y2) || !isFinite(y1_next) || !isFinite(y2_next)) {
+                        continue;
+                    }
+                    
+                    const diff1 = y1 - y2;
+                    const diff2 = y1_next - y2_next;
+                    
+                    if (diff1 * diff2 <= 0) {
+                        const intersection = findRootBisection(
+                            (x) => func1(x) - func2(x),
+                            x,
+                            x + step
+                        );
+                        
+                        // 避免重复的交点
+                        if (!intersections.some(p => Math.abs(p.x - intersection) < step/10)) {
+                            intersections.push({
+                                x: intersection,
+                                y: func1(intersection)
+                            });
+                        }
+                    }
+                } catch (error) {
+                    continue;
+                }
+            }
+            
+            return intersections;
+        }
+        
+        // ==================== 多函数管理系统 ====================
+        function addToMultiFunction() {
+            if (!currentExpression) {
+                showError("请输入函数表达式");
+                return;
+            }
+            
+            const colorIndex = multiFunctions.length % functionColors.length;
+            const newFunction = {
+                id: Date.now(),
+                expression: currentExpression,
+                color: functionColors[colorIndex],
+                visible: true,
+                name: `函数 ${multiFunctions.length + 1}`
+            };
+            
+            multiFunctions.push(newFunction);
+            updateMultiFunctionList();
+            plotAllFunctions();
+            
+            showMessage(`已添加函数: ${currentExpression}`, 'success');
+        }
+        
+        function addNewFunction() {
+            const newFunction = {
+                id: Date.now(),
+                expression: "sin(x)",
+                color: functionColors[multiFunctions.length % functionColors.length],
+                visible: true,
+                name: `函数 ${multiFunctions.length + 1}`
+            };
+            
+            multiFunctions.push(newFunction);
+            updateMultiFunctionList();
+            plotAllFunctions();
+        }
+        
+        function clearAllFunctions() {
+            multiFunctions = [];
+            updateMultiFunctionList();
+            plotAllFunctions();
+        }
+        
+        function updateMultiFunctionList() {
+            const listElement = document.getElementById('multiFunctionList');
+            const propertiesElement = document.getElementById('functionProperties');
+            
+            listElement.innerHTML = '';
+            propertiesElement.innerHTML = '';
+            
+            multiFunctions.forEach((func, index) => {
+                // 添加到列表
+                const funcItem = document.createElement('div');
+                funcItem.className = 'function-item';
+                funcItem.innerHTML = `
+                    <div style="display: flex; align-items: center;">
+                        <div class="color-indicator" style="background-color: ${func.color};"></div>
+                        <div style="flex: 1; font-family: 'Cambria Math', 'STIX Two Math', serif; font-size: 0.9em;">
+                            ${func.name}: y = ${func.expression}
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 5px;">
+                        <button onclick="toggleFunctionVisibility(${func.id})" style="padding: 2px 8px; font-size: 0.8em;">
+                            ${func.visible ? '隐藏' : '显示'}
+                        </button>
+                        <button onclick="removeFunction(${func.id})" style="padding: 2px 8px; font-size: 0.8em; background: #ff4757; color: white;">
+                            删除
+                        </button>
+                    </div>
+                `;
+                listElement.appendChild(funcItem);
+                
+                // 添加到属性面板
+                const propItem = document.createElement('div');
+                propItem.className = 'analysis-result';
+                propItem.style.margin = '5px 0';
+                propItem.style.padding = '8px';
+                propItem.innerHTML = `
+                    <div style="display: flex; align-items: center; margin-bottom: 5px;">
+                        <div style="width: 15px; height: 15px; background-color: ${func.color}; margin-right: 10px; border-radius: 2px;"></div>
+                        <strong>${func.name}</strong>
+                    </div>
+                    <div style="font-size: 0.9em; font-family: 'Cambria Math', 'STIX Two Math', serif;">
+                        y = ${func.expression}
+                    </div>
+                `;
+                propertiesElement.appendChild(propItem);
+            });
+            
+            if (multiFunctions.length === 0) {
+                listElement.innerHTML = '<div style="text-align: center; color: #666; padding: 20px;">暂无函数，点击"添加函数"开始</div>';
+                propertiesElement.innerHTML = '<div style="text-align: center; color: #666; padding: 20px;">暂无函数属性</div>';
+            }
+        }
+        
+        function toggleFunctionVisibility(funcId) {
+            const func = multiFunctions.find(f => f.id === funcId);
+            if (func) {
+                func.visible = !func.visible;
+                updateMultiFunctionList();
+                plotAllFunctions();
+            }
+        }
+        
+        function removeFunction(funcId) {
+            multiFunctions = multiFunctions.filter(f => f.id !== funcId);
+            updateMultiFunctionList();
+            plotAllFunctions();
+        }
+        
+        function plotAllFunctions() {
+            if (multiFunctions.length === 0) {
+                multiCtx.clearRect(0, 0, multiCanvas.width, multiCanvas.height);
+                return;
+            }
+            
+            // 清空画布
+            multiCtx.clearRect(0, 0, multiCanvas.width, multiCanvas.height);
+            
+            // 计算绘制区域
+            const plotWidth = multiCanvas.width;
+            const plotHeight = multiCanvas.height;
+            
+            // 保存画布状态
+            multiCtx.save();
+            
+            // 应用变换
+            multiCtx.translate(plotWidth/2 + offsetX, plotHeight/2 + offsetY);
+            multiCtx.scale(zoomLevel, zoomLevel);
+            
+            // 绘制坐标系
+            drawCoordinateSystem(multiCtx, plotWidth, plotHeight);
+            
+            // 绘制每个函数
+            multiFunctions.forEach((func, index) => {
+                if (!func.visible) return;
+                
+                try {
+                    const funcObj = parseExpression(func.expression);
+                    multiCtx.beginPath();
+                    multiCtx.strokeStyle = func.color;
+                    multiCtx.lineWidth = 2;
+                    multiCtx.lineJoin = 'round';
+                    multiCtx.lineCap = 'round';
+                    
+                    const xRange = scaleXMax - scaleXMin;
+                    const pixelWidth = plotWidth * zoomLevel;
+                    const step = xRange / (pixelWidth / samplingFactor);
+                    
+                    let firstPoint = true;
+                    let lastValidPoint = null;
+                    
+                    for (let mathX = scaleXMin; mathX <= scaleXMax; mathX += step) {
+                        try {
+                            const mathY = funcObj(mathX);
+                            
+                            if (!isFinite(mathY) || Math.abs(mathY) > 1e10) {
+                                firstPoint = true;
+                                lastValidPoint = null;
+                                continue;
+                            }
+                            
+                            // 转换为屏幕坐标
+                            const screenX = (mathX - scaleXMin) / xRange * plotWidth - plotWidth/2;
+                            const screenY = -((mathY - scaleYMin) / (scaleYMax - scaleYMin) * plotHeight - plotHeight/2);
+                            
+                            if (Math.abs(screenY) > plotHeight * 10) {
+                                firstPoint = true;
+                                lastValidPoint = null;
+                                continue;
+                            }
+                            
+                            if (firstPoint) {
+                                multiCtx.moveTo(screenX, screenY);
+                                firstPoint = false;
+                            } else {
+                                if (lastValidPoint && Math.abs(screenY - lastValidPoint.y) < plotHeight * 2) {
+                                    multiCtx.lineTo(screenX, screenY);
+                                } else {
+                                    multiCtx.moveTo(screenX, screenY);
+                                }
+                            }
+                            
+                            lastValidPoint = {x: screenX, y: screenY};
+                            
+                        } catch (error) {
+                            firstPoint = true;
+                            lastValidPoint = null;
+                        }
+                    }
+                    
+                    multiCtx.stroke();
+                    
+                } catch (error) {
+                    console.error(`绘制函数 ${func.name} 错误:`, error);
+                }
+            });
+            
+            multiCtx.restore();
+            
+            // 绘制图例
+            drawMultiFunctionLegend();
+        }
+        
+        function drawMultiFunctionLegend() {
+            const legendX = 20;
+            const legendY = 20;
+            const itemHeight = 25;
+            
+            multiCtx.save();
+            multiCtx.resetTransform();
+            
+            // 绘制背景
+            multiCtx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+            multiCtx.fillRect(legendX - 10, legendY - 10, 
+                200, multiFunctions.filter(f => f.visible).length * itemHeight + 20);
+            multiCtx.strokeStyle = '#ddd';
+            multiCtx.strokeRect(legendX - 10, legendY - 10, 
+                200, multiFunctions.filter(f => f.visible).length * itemHeight + 20);
+            
+            // 绘制图例项
+            let visibleIndex = 0;
+            multiFunctions.forEach((func, index) => {
+                if (!func.visible) return;
+                
+                const yPos = legendY + visibleIndex * itemHeight;
+                visibleIndex++;
+                
+                // 颜色标记
+                multiCtx.fillStyle = func.color;
+                multiCtx.fillRect(legendX, yPos, 20, 15);
+                
+                // 函数名称
+                multiCtx.fillStyle = '#333';
+                multiCtx.font = '12px Arial';
+                multiCtx.textAlign = 'left';
+                multiCtx.fillText(func.name, legendX + 30, yPos + 12);
+            });
+            
+            multiCtx.restore();
+        }
+        
+        function findAllIntersections() {
+            if (multiFunctions.length < 2) {
+                showMessage("需要至少两个函数进行交点分析", "error");
+                return;
+            }
+            
+            const intersections = [];
+            
+            // 比较每对函数
+            for (let i = 0; i < multiFunctions.length; i++) {
+                for (let j = i + 1; j < multiFunctions.length; j++) {
+                    try {
+                        const func1 = parseExpression(multiFunctions[i].expression);
+                        const func2 = parseExpression(multiFunctions[j].expression);
+                        
+                        const funcIntersections = findFunctionIntersections(func1, func2, scaleXMin, scaleXMax);
+                        
+                        funcIntersections.forEach(point => {
+                            intersections.push({
+                                func1: multiFunctions[i].name,
+                                func2: multiFunctions[j].name,
+                                x: point.x,
+                                y: point.y
+                            });
+                        });
+                    } catch (error) {
+                        console.error(`计算交点错误 ${multiFunctions[i].name} 和 ${multiFunctions[j].name}:`, error);
+                    }
+                }
+            }
+            
+            // 显示结果
+            const resultsDiv = document.getElementById('intersectionResults');
+            let resultsHTML = '<h4>交点分析结果</h4>';
+            
+            if (intersections.length > 0) {
+                resultsHTML += '<p>找到的交点：</p>';
+                intersections.forEach((point, index) => {
+                    const exactX = findExactRepresentation(point.x);
+                    const exactY = findExactRepresentation(point.y);
+                    resultsHTML += `
+                        <p>交点 ${index + 1}: 
+                        ${point.func1} 与 ${point.func2} 相交于 
+                        (${exactX}, ${exactY}) ≈ (${formatNumber(point.x)}, ${formatNumber(point.y)})</p>
+                    `;
+                });
+            } else {
+                resultsHTML += '<p>在区间内未找到交点</p>';
+            }
+            
+            resultsDiv.innerHTML = resultsHTML;
+            
+            // 在图上标记交点
+            markIntersectionsOnGraph(intersections);
+        }
+        
+        function markIntersectionsOnGraph(intersections) {
+            multiCtx.save();
+            multiCtx.resetTransform();
+            
+            intersections.forEach(point => {
+                // 转换到屏幕坐标
+                const screenX = (point.x - scaleXMin) / (scaleXMax - scaleXMin) * multiCanvas.width;
+                const screenY = multiCanvas.height - (point.y - scaleYMin) / (scaleYMax - scaleYMin) * multiCanvas.height;
+                
+                // 绘制交点标记
+                multiCtx.beginPath();
+                multiCtx.arc(screenX, screenY, 5, 0, Math.PI * 2);
+                multiCtx.fillStyle = '#ff4757';
+                multiCtx.fill();
+                multiCtx.strokeStyle = 'white';
+                multiCtx.lineWidth = 2;
+                multiCtx.stroke();
+            });
+            
+            multiCtx.restore();
+        }
+        
+        // ==================== 科学计算器功能 ====================
+        let calcExpression = "";
+        
+        function calcInput(value) {
+            if (calcExpression === "0" && !isNaN(value)) {
+                calcExpression = value;
+            } else {
+                calcExpression += value;
+            }
+            document.getElementById('calcDisplay').textContent = calcExpression || "0";
+        }
+        
+        function calcClear() {
+            calcExpression = "";
+            document.getElementById('calcDisplay').textContent = "0";
+        }
+        
+        function calcBackspace() {
+            calcExpression = calcExpression.slice(0, -1);
+            document.getElementById('calcDisplay').textContent = calcExpression || "0";
+        }
+        
+        function calcCalculate() {
+            try {
+                if (!calcExpression) return;
+                
+                // 预处理表达式
+                let processedExpr = calcExpression
+                    .replace(/pi/g, 'Math.PI')
+                    .replace(/e/g, 'Math.E')
+                    .replace(/\^/g, '**')
+                    .replace(/sin\(/g, 'Math.sin(')
+                    .replace(/cos\(/g, 'Math.cos(')
+                    .replace(/tan\(/g, 'Math.tan(')
+                    .replace(/log\(/g, 'Math.log10(')
+                    .replace(/ln\(/g, 'Math.log(')
+                    .replace(/sqrt\(/g, 'Math.sqrt(')
+                    .replace(/abs\(/g, 'Math.abs(')
+                    .replace(/exp\(/g, 'Math.exp(')
+                    .replace(/floor\(/g, 'Math.floor(')
+                    .replace(/ceil\(/g, 'Math.ceil(')
+                    .replace(/round\(/g, 'Math.round(');
+                
+                const result = eval(processedExpr);
+                const formattedResult = formatExactValue(result);
+                
+                document.getElementById('calcDisplay').textContent = formattedResult;
+                
+                // 添加到历史记录
+                addToCalcHistory(`${calcExpression} = ${formattedResult}`);
+                calcExpression = result.toString();
+                
+            } catch (error) {
+                document.getElementById('calcDisplay').textContent = "错误";
+                calcExpression = "";
+            }
+        }
+        
+        function addToCalcHistory(entry) {
+            const historyDiv = document.getElementById('calcHistory');
+            const entryDiv = document.createElement('div');
+            entryDiv.className = 'analysis-result';
+            entryDiv.style.fontSize = '0.9em';
+            entryDiv.style.margin = '5px 0';
+            entryDiv.textContent = entry;
+            historyDiv.insertBefore(entryDiv, historyDiv.firstChild);
+            
+            if (historyDiv.children.length > 10) {
+                historyDiv.removeChild(historyDiv.lastChild);
+            }
+        }
+        
+        function loadExampleToCalc(expr) {
+            calcExpression = expr;
+            document.getElementById('calcDisplay').textContent = expr;
+        }
+        
+        function solveEquationAdvanced() {
+            const equation = document.getElementById('equationInput').value;
+            const variable = document.getElementById('equationVar').value || 'x';
+            const solveMin = parseFloat(document.getElementById('solveMin').value) || -10;
+            const solveMax = parseFloat(document.getElementById('solveMax').value) || 10;
+            
+            if (!equation) {
+                document.getElementById('equationResults').innerHTML = 
+                    '<div class="analysis-result" style="color:#e74c3c">请输入方程</div>';
+                return;
+            }
+            
+            try {
+                // 将方程转换为函数
+                let eqFunc;
+                if (equation.includes('=')) {
+                    const [left, right] = equation.split('=');
+                    eqFunc = parseExpression(`${left} - (${right})`);
+                } else {
+                    eqFunc = parseExpression(equation);
+                }
+                
+                // 寻找零点（方程的解）
+                const solutions = findFunctionRoots(eqFunc, solveMin, solveMax);
+                
+                // 格式化结果
+                let resultHTML = '<div class="analysis-result"><h4>方程求解结果</h4>';
+                
+                if (solutions.length > 0) {
+                    resultHTML += `<p>在区间 [${solveMin}, ${solveMax}] 上找到 ${solutions.length} 个解：</p>`;
+                    solutions.forEach((sol, i) => {
+                        const exactSol = findExactRepresentation(sol);
+                        resultHTML += `<p>解 ${i+1}: ${variable} = ${exactSol} ≈ ${formatNumber(sol)}</p>`;
+                    });
+                } else {
+                    resultHTML += `<p>在区间 [${solveMin}, ${solveMax}] 上未找到实数解</p>`;
+                }
+                
+                resultHTML += '</div>';
+                document.getElementById('equationResults').innerHTML = resultHTML;
+                
+            } catch (error) {
+                document.getElementById('equationResults').innerHTML = 
+                    `<div class="analysis-result" style="color:#e74c3c">求解错误: ${error.message}</div>`;
+            }
+        }
+        
+        // ==================== 比大小功能 ====================
+        let exprA = "";
+        let exprB = "";
+        
+        function addToComparison(side, value) {
+            if (side === 'A') {
+                exprA += value;
+                document.getElementById('exprADisplay').textContent = exprA || "输入表达式";
+            } else {
+                exprB += value;
+                document.getElementById('exprBDisplay').textContent = exprB || "输入表达式";
+            }
+        }
+        
+        function clearComparison(side) {
+            if (side === 'A') {
+                exprA = "";
+                document.getElementById('exprADisplay').textContent = "输入表达式";
+            } else {
+                exprB = "";
+                document.getElementById('exprBDisplay').textContent = "输入表达式";
+            }
+        }
+        
+        function compareExpressions() {
+            if (!exprA || !exprB) {
+                showComparisonResult("请输入两个表达式");
+                return;
+            }
+            
+            const xMin = parseFloat(document.getElementById('compXMin').value) || -5;
+            const xMax = parseFloat(document.getElementById('compXMax').value) || 5;
+            const compType = document.getElementById('compType').value;
+            const precision = document.getElementById('precision').value;
+            
+            try {
+                const funcA = parseExpression(exprA);
+                const funcB = parseExpression(exprB);
+                
+                let resultHTML = '<div class="analysis-result"><h4>比较结果</h4>';
+                
+                if (compType === 'numeric') {
+                    // 数值比较
+                    let comparisons = [];
+                    const step = (xMax - xMin) / 10;
+                    
+                    for (let x = xMin; x <= xMax; x += step) {
+                        try {
+                            const a = funcA(x);
+                            const b = funcB(x);
+                            
+                            if (isFinite(a) && isFinite(b)) {
+                                comparisons.push({
+                                    x: x,
+                                    a: a,
+                                    b: b,
+                                    comparison: a > b ? 'A > B' : a < b ? 'A < B' : 'A = B'
+                                });
+                            }
+                        } catch (error) {
+                            continue;
+                        }
+                    }
+                    
+                    if (comparisons.length > 0) {
+                        resultHTML += '<p>数值比较结果：</p>';
+                        comparisons.forEach(comp => {
+                            const aStr = formatValue(comp.a, precision);
+                            const bStr = formatValue(comp.b, precision);
+                            const xStr = formatValue(comp.x, precision);
+                            resultHTML += `<p>当 x = ${xStr} 时: A = ${aStr}, B = ${bStr}, ${comp.comparison}</p>`;
+                        });
+                    }
+                }
+                
+                resultHTML += '</div>';
+                showComparisonResult(resultHTML);
+                
+            } catch (error) {
+                showComparisonResult(`<div class="analysis-result" style="color:#e74c3c">比较错误: ${error.message}</div>`);
+            }
+        }
+        
+        function plotComparison() {
+            if (!exprA || !exprB) return;
+            
+            const xMin = parseFloat(document.getElementById('compXMin').value) || -5;
+            const xMax = parseFloat(document.getElementById('compXMax').value) || 5;
+            
+            try {
+                const funcA = parseExpression(exprA);
+                const funcB = parseExpression(exprB);
+                
+                comparisonCtx.clearRect(0, 0, comparisonCanvas.width, comparisonCanvas.height);
+                
+                // 绘制比较图
+                const plotWidth = comparisonCanvas.width;
+                const plotHeight = comparisonCanvas.height;
+                
+                // 确定值域
+                let minY = Infinity;
+                let maxY = -Infinity;
+                const step = (xMax - xMin) / 100;
+                
+                for (let x = xMin; x <= xMax; x += step) {
+                    try {
+                        const a = funcA(x);
+                        const b = funcB(x);
+                        
+                        if (isFinite(a)) {
+                            minY = Math.min(minY, a);
+                            maxY = Math.max(maxY, a);
+                        }
+                        if (isFinite(b)) {
+                            minY = Math.min(minY, b);
+                            maxY = Math.max(maxY, b);
+                        }
+                    } catch (error) {
+                        continue;
+                    }
+                }
+                
+                if (minY === Infinity) minY = -10;
+                if (maxY === -Infinity) maxY = 10;
+                
+                // 绘制坐标系
+                const xRange = xMax - xMin;
+                const yRange = maxY - minY;
+                
+                // 绘制网格
+                comparisonCtx.strokeStyle = '#e8e8e8';
+                comparisonCtx.lineWidth = 1;
+                
+                // 绘制函数
+                comparisonCtx.save();
+                
+                // 绘制函数A
+                comparisonCtx.beginPath();
+                comparisonCtx.strokeStyle = '#4facfe';
+                comparisonCtx.lineWidth = 3;
+                
+                let firstPoint = true;
+                for (let x = xMin; x <= xMax; x += step) {
+                    try {
+                        const y = funcA(x);
+                        if (isFinite(y)) {
+                            const screenX = (x - xMin) / xRange * plotWidth;
+                            const screenY = plotHeight - (y - minY) / yRange * plotHeight;
+                            
+                            if (firstPoint) {
+                                comparisonCtx.moveTo(screenX, screenY);
+                                firstPoint = false;
+                            } else {
+                                comparisonCtx.lineTo(screenX, screenY);
+                            }
+                        } else {
+                            firstPoint = true;
+                        }
+                    } catch (error) {
+                        firstPoint = true;
+                    }
+                }
+                comparisonCtx.stroke();
+                
+                // 绘制函数B
+                comparisonCtx.beginPath();
+                comparisonCtx.strokeStyle = '#f093fb';
+                comparisonCtx.lineWidth = 3;
+                
+                firstPoint = true;
+                for (let x = xMin; x <= xMax; x += step) {
+                    try {
+                        const y = funcB(x);
+                        if (isFinite(y)) {
+                            const screenX = (x - xMin) / xRange * plotWidth;
+                            const screenY = plotHeight - (y - minY) / yRange * plotHeight;
+                            
+                            if (firstPoint) {
+                                comparisonCtx.moveTo(screenX, screenY);
+                                firstPoint = false;
+                            } else {
+                                comparisonCtx.lineTo(screenX, screenY);
+                            }
+                        } else {
+                            firstPoint = true;
+                        }
+                    } catch (error) {
+                        firstPoint = true;
+                    }
+                }
+                comparisonCtx.stroke();
+                comparisonCtx.restore();
+                
+            } catch (error) {
+                console.error("绘制比较图错误:", error);
+            }
+        }
+        
+        function showComparisonResult(html) {
+            document.getElementById('comparisonResult').innerHTML = html;
+        }
+        
+        // ==================== 工具函数 ====================
+        function formatNumber(num) {
+            if (!isFinite(num)) return num > 0 ? '∞' : num < 0 ? '-∞' : 'NaN';
+            if (Math.abs(num) < 1e-10) return '0';
+            
+            // 对于非常小或非常大的数，使用科学计数法
+            if (Math.abs(num) < 0.001 || Math.abs(num) > 1e6) {
+                return num.toExponential(4);
+            }
+            
+            // 保留有效数字
+            const absNum = Math.abs(num);
+            let decimals = 6;
+            if (absNum >= 100) decimals = 2;
+            else if (absNum >= 10) decimals = 3;
+            else if (absNum >= 1) decimals = 4;
+            else if (absNum >= 0.1) decimals = 5;
+            else decimals = 6;
+            
+            const formatted = num.toFixed(decimals);
+            return formatted.replace(/(\.\d*?)0+$/, '$1').replace(/\.$/, '');
+        }
+        
+        function findExactRepresentation(num) {
+            if (!isFinite(num)) return num > 0 ? '∞' : '-∞';
+            
+            // 检查是否为0
+            if (Math.abs(num) < 1e-12) return '0';
+            
+            // 检查是否为特殊值
+            for (const [symbol, value] of Object.entries(specialValues)) {
+                if (Math.abs(num - value) < 1e-10) return symbol;
+                if (Math.abs(num + value) < 1e-10) return '-' + symbol;
+            }
+            
+            // 检查是否为π的简单有理倍数
+            for (let denominator = 1; denominator <= 12; denominator++) {
+                for (let numerator = -24; numerator <= 24; numerator++) {
+                    if (numerator === 0) continue;
+                    const value = (numerator * Math.PI) / denominator;
+                    if (Math.abs(num - value) < 1e-10) {
+                        if (Math.abs(numerator) === 1 && denominator === 1) {
+                            return numerator > 0 ? 'π' : '-π';
+                        } else if (denominator === 1) {
+                            return numerator + 'π';
+                        } else if (Math.abs(numerator) === 1) {
+                            return (numerator > 0 ? '' : '-') + 'π/' + denominator;
+                        } else {
+                            return numerator + 'π/' + denominator;
+                        }
+                    }
+                }
+            }
+            
+            // 检查是否为简单分数
+            for (let denominator = 1; denominator <= 20; denominator++) {
+                const numerator = Math.round(num * denominator);
+                const value = numerator / denominator;
+                if (Math.abs(num - value) < 1e-8) {
+                    if (denominator === 1) return numerator.toString();
+                    if (numerator === 1 && denominator === 2) return '1/2';
+                    if (numerator === 1 && denominator === 3) return '1/3';
+                    if (numerator === 2 && denominator === 3) return '2/3';
+                    if (numerator === 1 && denominator === 4) return '1/4';
+                    if (numerator === 3 && denominator === 4) return '3/4';
+                    return numerator + '/' + denominator;
+                }
+            }
+            
+            // 检查是否为√2、√3、√5的有理倍数
+            const roots = [Math.SQRT2, Math.sqrt(3), Math.sqrt(5)];
+            const rootSymbols = ['√2', '√3', '√5'];
+            
+            for (let i = 0; i < roots.length; i++) {
+                for (let coefficient = 1; coefficient <= 10; coefficient++) {
+                    const value = coefficient * roots[i];
+                    if (Math.abs(num - value) < 1e-10) {
+                        return coefficient === 1 ? rootSymbols[i] : coefficient + rootSymbols[i];
+                    }
+                    if (Math.abs(num + value) < 1e-10) {
+                        return coefficient === 1 ? '-' + rootSymbols[i] : '-' + coefficient + rootSymbols[i];
+                    }
+                }
+            }
+            
+            // 默认返回数值表示
+            return formatNumber(num);
+        }
+        
+        function formatExactValue(num) {
+            const exact = findExactRepresentation(num);
+            return `<span class="exact-value">${exact}</span>`;
+        }
+        
+        function formatValue(value, precision) {
+            if (!isFinite(value)) return value > 0 ? '∞' : '-∞';
+            
+            switch(precision) {
+                case 'exact':
+                    return findExactRepresentation(value);
+                case 'decimal4':
+                    return value.toFixed(4);
+                case 'decimal2':
+                    return value.toFixed(2);
+                default:
+                    return findExactRepresentation(value);
+            }
+        }
+        
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                hideError();
+            }, 5000);
+        }
+        
+        function showMessage(message, type = 'info') {
+            // 简单的消息提示
+            console.log(`${type}: ${message}`);
+        }
+        
+        function hideError() {
+            document.getElementById('errorMessage').style.display = 'none';
+        }
+        
+        function resetView() {
+            offsetX = 0;
+            offsetY = 0;
+            zoomLevel = 1;
+            
+            // 重置坐标系
+            document.getElementById('xMin').value = -10;
+            document.getElementById('xMax').value = 10;
+            document.getElementById('yMin').value = -10;
+            document.getElementById('yMax').value = 10;
+            
+            scaleXMin = -10;
+            scaleXMax = 10;
+            scaleYMin = -10;
+            scaleYMax = 10;
+            
+            // 重新绘制
+            if (currentTab === 'function') plotFunction();
+            else if (currentTab === 'multi-function') plotAllFunctions();
+            else if (currentTab === 'comparison') plotComparison();
+        }
+        
+        // 分析不等式函数（占位符）
+        function analyzeInequality() {
+            showMessage("不等式分析功能开发中", "info");
+        }
+    </script>
+</body>
+</html>
