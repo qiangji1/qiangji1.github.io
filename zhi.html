@@ -1,214 +1,514 @@
-<!doctype html>
-<html class="no-js" lang="zxx">
-
+<!DOCTYPE html>
+<html lang="zh-CN">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>置顶文件｜强基一班</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <!-- Favicons -->
-    <link rel="shortcut icon" href="img/favicon.ico">
-    <!-- Fontawesome css -->
-    <link rel="stylesheet" href="css/font-awesome.min.css">
-    <!-- Bicon css -->
-    <link rel="stylesheet" href="css/bicon.min.css">
-    <!-- Themify css -->
-    <link rel="stylesheet" href="css/themify-icons.css">
-    <!-- Iconfont css -->
-    <link rel="stylesheet" href="css/icofont.css">
-     <!-- Animate css -->
-    <link rel="stylesheet" href="css/animate.css">
-    <!-- Animate headline css -->
-    <link rel="stylesheet" href="css/animated-headline.css">
-    <!-- Jquery magnific popup css -->
-    <link rel="stylesheet" href="css/magnific-popup.css">
-    <!-- youtube player css -->
-    <link rel="stylesheet" href="css/jquery.mb.YTPlayer.min.css">
-    <!-- Meanmenu css -->
-    <link rel="stylesheet" href="css/meanmenu.min.css">
-    <!-- Owl carousel css -->
-    <link rel="stylesheet" href="css/owl.carousel.min.css">
-    <!-- Bootstrap css -->
-    <link rel="stylesheet" href="css/bootstrap.min.css">
-    <!-- Custom css -->
-    <link rel="stylesheet" href="css/default.css">
-    <!-- Main css -->
-    <link rel="stylesheet" href="style.css">
-    <!-- Responsive css -->
-    <link rel="stylesheet" href="css/responsive.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, maximum-scale=2.0">
+  <title>葛乐加密器 · 站长fengxing2202</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-    <!-- Modernizer js -->
-    <script src="js/vendor/modernizr-3.5.0.min.js"></script>
+    body {
+      background: linear-gradient(145deg, #1a1e2b 0%, #252b3a 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Segoe UI', 'Noto Sans SC', 'PingFang SC', system-ui, -apple-system, sans-serif;
+      padding: 1.5rem;
+      margin: 0;
+      box-shadow: inset 0 0 120px rgba(0,0,0,0.5);
+    }
+
+    .glass-card {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-radius: 2.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 30px 50px rgba(0, 0, 0, 0.6), inset 0 0 20px rgba(255, 255, 255, 0.08);
+      padding: 2.2rem 2rem;
+      width: 100%;
+      max-width: 750px;
+      transition: all 0.2s ease;
+      color: #f0e9e1;
+    }
+
+    .header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+      border-bottom: 1px dashed rgba(255, 215, 150, 0.35);
+      padding-bottom: 1.2rem;
+    }
+
+    .title {
+      font-size: 1.9rem;
+      font-weight: 600;
+      letter-spacing: 2px;
+      background: linear-gradient(135deg, #f9d56e, #f5b042);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: 0 0 12px rgba(245, 176, 66, 0.4);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .title span {
+      font-size: 2rem;
+      filter: drop-shadow(0 4px 6px black);
+    }
+
+    .badge {
+      background: rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      padding: 0.4rem 1.2rem;
+      border-radius: 3rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #ffdb9c;
+      border: 1px solid rgba(255, 200, 100, 0.5);
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+    }
+
+    .convert-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 1.8rem;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    label {
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: #c7b9a2;
+      margin-left: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    textarea {
+      width: 100%;
+      padding: 1.2rem 1.2rem;
+      border-radius: 1.5rem;
+      background: rgba(10, 12, 20, 0.7);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 180, 60, 0.25);
+      color: #f7efe2;
+      font-size: 1rem;
+      line-height: 1.6;
+      resize: vertical;
+      font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+      outline: none;
+      transition: all 0.25s;
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.5);
+    }
+
+    textarea:focus {
+      border-color: #f5b042;
+      box-shadow: 0 0 18px #f5b04255, 0 8px 20px rgba(0,0,0,0.6);
+      background: rgba(15, 18, 28, 0.8);
+    }
+
+    textarea::placeholder {
+      color: #8b8f9f;
+      font-style: italic;
+      font-size: 0.9rem;
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      margin: 0.5rem 0 0.3rem;
+    }
+
+    .btn {
+      background: rgba(30, 35, 48, 0.7);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(245, 176, 66, 0.35);
+      padding: 0.85rem 1.8rem;
+      border-radius: 3rem;
+      font-weight: 600;
+      font-size: 1rem;
+      letter-spacing: 1.5px;
+      color: #fadf9f;
+      cursor: pointer;
+      transition: 0.25s;
+      background: linear-gradient(120deg, rgba(40, 45, 60, 0.7) 0%, rgba(25, 28, 40, 0.8) 100%);
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.3rem;
+      flex: 1 1 auto;
+      min-width: 130px;
+    }
+
+    .btn:hover {
+      border-color: #f9b84a;
+      color: #ffe5b1;
+      background: rgba(50, 55, 72, 0.8);
+      box-shadow: 0 10px 20px rgba(245, 176, 66, 0.25);
+      transform: translateY(-2px);
+    }
+
+    .btn:active {
+      transform: translateY(1px);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    }
+
+    .btn.primary {
+      background: linear-gradient(135deg, #e5a43c, #c47c2a);
+      border: 1px solid #ffcd7a;
+      color: #0b0c12;
+      font-weight: bold;
+      text-shadow: 0 1px 2px rgba(255,255,200,0.5);
+      box-shadow: 0 8px 18px #e5941e60;
+    }
+
+    .btn.primary:hover {
+      background: linear-gradient(135deg, #f3b44a, #da8b34);
+      color: #000;
+    }
+
+    .output-area {
+      background: rgba(8, 10, 18, 0.8);
+      border-radius: 1.5rem;
+      padding: 1.2rem 1.2rem;
+      border: 1px solid rgba(250, 200, 100, 0.3);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      word-break: break-all;
+      white-space: pre-wrap;
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 1rem;
+      line-height: 1.7;
+      color: #fad98b;
+      min-height: 110px;
+      max-height: 250px;
+      overflow-y: auto;
+      box-shadow: inset 0 0 25px rgba(0,0,0,0.7);
+    }
+
+    .legend {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      font-size: 0.9rem;
+      color: #c7ad7b;
+      margin-top: 0.2rem;
+      flex-wrap: wrap;
+    }
+
+    .legend i {
+      font-style: normal;
+      background: #2e2c24;
+      padding: 0.2rem 0.7rem;
+      border-radius: 20px;
+      margin: 0 0.2rem;
+    }
+
+    .footer-note {
+      text-align: right;
+      font-size: 0.8rem;
+      color: #9a8b78;
+      margin-top: 0.8rem;
+      border-top: 1px dashed rgba(255, 200, 120, 0.25);
+      padding-top: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .copy-btn {
+      background: none;
+      border: 1px solid #b4945a;
+      color: #ddc7a2;
+      padding: 0.35rem 1.2rem;
+      border-radius: 2rem;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: 0.2s;
+      backdrop-filter: blur(5px);
+      background: rgba(20, 20, 28, 0.5);
+    }
+
+    .copy-btn:hover {
+      background: #4a3e2c;
+      color: #ffe3a5;
+      border-color: #f3b042;
+    }
+
+    @media (max-width: 500px) {
+      .glass-card {
+        padding: 1.5rem 1.2rem;
+      }
+      .title {
+        font-size: 1.5rem;
+      }
+      .button-row {
+        flex-direction: column;
+      }
+      .btn {
+        width: 100%;
+      }
+    }
+  </style>
 </head>
-
 <body>
-    <!--[if lte IE 9]>
-        <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
-    <![endif]-->
-
-    <!-- Main Wrapper Start Here -->
-    <div class="wrapper">
-        <!-- Main Header Area Start -->
-        <header class="absolute-header trigger-menu header-sticky universal-header">
-            <div class="container">
-                <div class="main-header">
-                    <div class="row align-items-center">
-                        <div class="col-md-3">
-                            <!-- Logo Start -->
-                            <div class="logo">
-                                <a href="index.html"><img src="img/logo/logo2.png" alt="brand-logo"></a>
-                            </div>
-                            <!-- Logo End -->
-                        </div>
-                        <div class="col-md-9">
-                            <!-- Trigger Menu Area Start -->
-                            <div class="slide-menu-wrapper d-none d-lg-block float-right">
-                                    <button class="trigger-menu-icon">
-                                    <span></span>
-                                    <span></span>
-                                    <span></span>
-                                </button>
-                                <nav class="menu slide-menu-inner">
-                                    <ul class="primary-menu-list d-flex align-items-center">
-                                         <li class="active"><a href="zhi.html">置顶文件</a>
-                                        </li>
-                                        <li><a href="zhou.html">周内要闻</a></li>
-                                        <li><a href="img.html">图片展示</a>
-                                        </li>
-                                        <li><a href="feng.html">联系我们</a></li>
-                                    </ul>
-                                </nav>
-                            </div>
-                            <!-- Trigger Menu Area End -->
-                        </div>
-                    </div>
-                    <!-- Mobile Menu Start -->
-                    <div class="mobile-menu d-block d-lg-none">
-                        <nav>
-                            <ul>
-                                <li><a href="zhi.html">置顶文件</a>
-                                </li>
-                                <li><a href="zhou.html">周内要闻</a></li>
-                                <li><a href="img.html">图片展示</a>
-                                </li>
-                                <li><a href="feng.html">联系我们</a></li>
-                            </ul>
-                        </nav>
-                    </div>
-                    <!-- Mobile Menu End -->
-                </div>
-            </div>
-        </header>
-        <!-- Main Header Area End -->
-        <!-- Banner Area Start -->
-        <div class="slider-area breadcrumb-bg">
-            <div class="container">
-                <div class="main-breadcrumb text-center">
-                    <h3 class="breadcrumb-heading">置顶文件</h3>
-                    <ol class="breadcrumb breadcrumb-list justify-content-md-end justify-content-center">
-                      <li class="breadcrumb-item"><a href="index.html">首页</a></li>
-                      <li class="breadcrumb-item active">置顶文件</li>
-                    </ol>
-                </div>
-            </div>
-        </div>
-        <!-- Banner Area End -->
-        <!-- Skill Area Start -->
-        <div class="skill-area ptb-150">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-6">
-                        <div class="about-content mb-all-40">
-                           <!-- Section Title Start -->
-                            <div class="section-title section-heading">
-                                <h2>尚在<span>施工中...</span></h2>
-                            </div>
-                            <!-- Section Title End -->
-                            <p class="mb-20">这里还未搭建完成.</p>
-                            <p><--敬请期待--></p>
-                            <a class="transparent-btn" href="https://www.bilibili.com/video/BV1UT42167xb/?spm_id_from=333.337.search-card.all.click&vd_source=baf0f701dac67b1bca0032e2158a2fc4">千万别按</a>
-                        </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="skill-content">
-                            <div class="skill">
-                                <div class="progress">
-                                    <div class="lead">本站HTML成分</div>
-                                    <div data-wow-delay="1.2s" data-wow-duration="1.5s" style="width: 85%; visibility: visible; animation-duration: 1.5s; animation-delay: 1.2s; animation-name: fadeInLeft;" data-progress="90%" class="progress-bar wow fadeInLeft animated"><span>85%</span></div>
-                                </div>
-                                <div class="progress">
-                                    <div class="lead">本站CSS成分</div>
-                                    <div data-wow-delay="1.2s" data-wow-duration="1.5s" style="width: 15%; visibility: visible; animation-duration: 1.5s; animation-delay: 1.2s; animation-name: fadeInLeft;" data-progress="70%" class="progress-bar wow fadeInLeft animated"><span>15%</span></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Skill Area End -->
-        <!-- Footer Start -->
-        <footer class="footer-area ptb-100 dark-black-bg">
-            <div class="container">
-                <div class="footer-top text-center">
-                    <div class="logo mb-30">
-                        <a href="index.html"><img src="img/logo/logo.png" alt="brand-logo"></a>
-                    </div>
-                    <p>逆天强基一班，班主任讲话左脑搏击右脑，学生上课上午睡到下午，摊上TV不会提前喊放学</p>
-                </div>
-                <!-- Footer Bottom Start -->
-                <div class="footer-bottom">
-                    <div class="row">
-                        <div class="col-md-8">
-                            <div class="copyright-text mb-sm-30 text-center text-md-left">
-                                <p>&copy; 2025 All Rights Reserved.fengxing2202 ｜京ICP备-京公网安备</p>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                        </div>
-                    </div>
-                </div>
-                <!-- Footer Bottom End -->
-            </div>      
-        </footer>
-        <!-- Footer End -->
+  <div class="glass-card">
+    <div class="header">
+      <div class="title">
+        <span>葛乐</span> 密文加密
+      </div>
+      <div class="badge">站长 fengxing2202</div>
     </div>
-    <!-- Main Wrapper End Here -->
 
-    <!-- jquery 3.2.1 -->
-    <script src="js/vendor/jquery-3.2.1.min.js"></script>
-    <!-- animate headline js -->
-    <script src="js/animated-headline.js"></script>
-    <!-- youtube player js -->
-    <script src="js/jquery.mb.YTPlayer.min.js"></script>
-    <!-- jquery appear js -->
-    <script src="js/jquery.appear.js"></script>
-    <!-- Particle scripts -->
-    <script src="js/particles.min.js"></script>
-    <!-- Parallax scripts -->
-    <script src="js/jquery.parallax-1.1.3.js"></script>
-    <!-- Wow js -->
-    <script src="js/wow.min.js"></script>
-    <!-- Mobile menu js -->
-    <script src="js/jquery.meanmenu.min.js"></script>
-    <!-- ScrollUp js -->
-    <script src="js/jquery.scrollUp.js"></script>
-    <!-- Image loaded js -->
-    <script src="js/imagesloaded.pkgd.min.js"></script>
-    <!-- Isotope js -->
-    <script src="js/isotope.pkgd.min.js"></script>
-    <!-- Magnific js -->
-    <script src="js/jquery.magnific-popup.min.js"></script>
-    <!-- Owl carousel -->
-    <script src="js/owl.carousel.min.js"></script>
-    <!-- Bootstrap popper js -->
-    <script src="js/popper.min.js"></script>
-    <!-- Bootstrap js -->
-    <script src="js/bootstrap.min.js"></script>
-    <!-- Plugin js -->
-    <script src="js/plugins.js"></script>
-    <!-- Main activaion js -->
-    <script src="js/main.js"></script>
+    <div class="convert-panel">
+      <div class="input-group">
+        <label>
+          <span>📝</span> 原文 / 葛乐密文
+        </label>
+        <textarea id="userInput" placeholder="请输入文本" rows="4"></textarea>
+      </div>
+
+      <div class="button-row">
+        <button class="btn primary" id="encodeBtn"><span>🔒</span> 加密成葛乐文</button>
+        <button class="btn" id="decodeBtn"><span>🔓</span> 解密回原文</button>
+        <button class="btn" id="clearBtn"><span>🗑️</span> 清空</button>
+      </div>
+
+      <div class="input-group">
+        <label>
+          <span>✨</span> 转换结果
+        </label>
+        <div class="output-area" id="outputDisplay">
+          等待输入...
+        </div>
+      </div>
+
+    <div class="footer-note">
+      <span>葛乐加密算法</span>
+      <button class="copy-btn" id="copyResultBtn">📋 复制结果</button>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      'use strict';
+
+      const userInput = document.getElementById('userInput');
+      const outputDisplay = document.getElementById('outputDisplay');
+      const encodeBtn = document.getElementById('encodeBtn');
+      const decodeBtn = document.getElementById('decodeBtn');
+      const clearBtn = document.getElementById('clearBtn');
+      const copyBtn = document.getElementById('copyResultBtn');
+
+      const CHAR_TO_BIT = {
+        '葛': '1',
+        '乐': '0'
+      };
+
+      const BIT_TO_CHAR = {
+        '1': '葛',
+        '0': '乐'
+      };
+
+      function encodeToGeLe(text) {
+        if (typeof text !== 'string' || text.length === 0) {
+          return '';
+        }
+
+        let resultChars = [];
+        for (let i = 0; i < text.length; i++) {
+          const char = text.charAt(i);
+          let code = char.charCodeAt(0);
+          
+          try {
+            const encoder = new TextEncoder();
+            const byteArray = encoder.encode(char);
+            
+            for (let b = 0; b < byteArray.length; b++) {
+              const byte = byteArray[b];
+              let binStr = byte.toString(2).padStart(8, '0');
+              for (let k = 0; k < binStr.length; k++) {
+                const bit = binStr[k];
+                resultChars.push(BIT_TO_CHAR[bit] || bit);
+              }
+            }
+          } catch (e) {
+            let codeFallback = char.charCodeAt(0) % 256;
+            let binStr = codeFallback.toString(2).padStart(8, '0');
+            for (let k = 0; k < binStr.length; k++) {
+              resultChars.push(BIT_TO_CHAR[binStr[k]] || binStr[k]);
+            }
+          }
+        }
+        return resultChars.join('');
+      }
+
+      function decodeFromGeLe(geLeText) {
+        if (typeof geLeText !== 'string' || geLeText.length === 0) {
+          return '';
+        }
+
+        const filtered = geLeText.replace(/[^葛乐]/g, '');
+        if (filtered.length === 0) {
+          return '';
+        }
+
+        let bitString = '';
+        for (let i = 0; i < filtered.length; i++) {
+          const ch = filtered.charAt(i);
+          const bit = CHAR_TO_BIT[ch];
+          if (bit !== undefined) {
+            bitString += bit;
+          }
+        }
+
+        if (bitString.length === 0) {
+          return '';
+        }
+
+        const bytes = [];
+        for (let i = 0; i + 8 <= bitString.length; i += 8) {
+          const byteStr = bitString.substring(i, i + 8);
+          const byteValue = parseInt(byteStr, 2);
+          bytes.push(byteValue);
+        }
+
+        try {
+          const decoder = new TextDecoder('utf-8');
+          const uint8Array = new Uint8Array(bytes);
+          return decoder.decode(uint8Array);
+        } catch (e) {
+          console.warn('TextDecoder 失败，使用回退方案', e);
+          let result = '';
+          for (let i = 0; i < bytes.length; i++) {
+            result += String.fromCharCode(bytes[i]);
+          }
+          return result;
+        }
+      }
+
+      function setOutput(text) {
+        outputDisplay.textContent = text || '(空)';
+      }
+
+      function getInputText() {
+        return userInput.value || '';
+      }
+
+      function handleEncode() {
+        const input = getInputText();
+        if (input.trim() === '') {
+          setOutput('⚠️ 请输入要加密的文本');
+          return;
+        }
+        try {
+          const encoded = encodeToGeLe(input);
+          if (encoded.length === 0) {
+            setOutput('🔸 加密结果为空 (可能输入无有效字符)');
+          } else {
+            setOutput(encoded);
+          }
+        } catch (error) {
+          console.error(error);
+          setOutput('❌ 加密过程发生错误: ' + error.message);
+        }
+      }
+
+      function handleDecode() {
+        const input = getInputText();
+        if (input.trim() === '') {
+          setOutput('⚠️ 请输入葛乐密文 (包含葛和乐)');
+          return;
+        }
+        try {
+          const decoded = decodeFromGeLe(input);
+          if (decoded.length === 0) {
+            const hasGeLe = /[葛乐]/.test(input);
+            if (!hasGeLe) {
+              setOutput('🔸 未检测到“葛”或“乐”字符，请检查密文');
+            } else {
+              setOutput('🔸 解密结果为空 (可能密文不完整)');
+            }
+          } else {
+            setOutput(decoded);
+          }
+        } catch (error) {
+          console.error(error);
+          setOutput('❌ 解密过程发生错误: ' + error.message);
+        }
+      }
+
+      function handleClear() {
+        userInput.value = '';
+        setOutput('等待输入...');
+        userInput.focus();
+      }
+
+      async function handleCopy() {
+        const resultText = outputDisplay.textContent || '';
+        if (!resultText || resultText === '等待输入...' || resultText.startsWith('⚠️') || resultText.startsWith('❌')) {
+          alert('没有可复制的有效结果');
+          return;
+        }
+        try {
+          await navigator.clipboard.writeText(resultText);
+          const originalText = copyBtn.textContent;
+          copyBtn.textContent = '✅ 已复制';
+          copyBtn.disabled = true;
+          setTimeout(() => {
+            copyBtn.textContent = originalText;
+            copyBtn.disabled = false;
+          }, 1500);
+        } catch (err) {
+          alert('复制失败: ' + err);
+        }
+      }
+
+      encodeBtn.addEventListener('click', handleEncode);
+      decodeBtn.addEventListener('click', handleDecode);
+      clearBtn.addEventListener('click', handleClear);
+      copyBtn.addEventListener('click', handleCopy);
+
+      userInput.addEventListener('keydown', (e) => {
+        if (e.ctrlKey && e.key === 'Enter') {
+          e.preventDefault();
+          handleEncode();
+        } else if (e.shiftKey && e.key === 'Enter') {
+          e.preventDefault();
+          handleDecode();
+        }
+      });
+
+      setOutput('等待输入...');
+
+      console.log('葛乐二进制加密器已启动 | 站长fengxing2202 | 葛=1 乐=0');
+    })();
+  </script>
 </body>
-
 </html>
