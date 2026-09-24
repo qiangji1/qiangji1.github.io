@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>崇实2025级1班 · WIKI</title>
+<style>
+
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+        background: #f9f5ee;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: 100vh;
+        padding: 1.5rem 1rem 2rem;
+        font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+        color: #2e241c;
+    }
+    .wiki-container { max-width: 1100px; width: 100%; }
+
+
+    .header {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.6rem;
+        padding-bottom: 0.8rem;
+        border-bottom: 3px dashed #d9c8b2;
+    }
+    .logo-link { text-decoration: none; color: inherit; }
+    .logo h1 {
+        font-size: 2.1rem;
+        font-weight: 700;
+        color: #4a3729;
+        letter-spacing: -0.5px;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 0.3rem;
+        line-height: 1.2;
+    }
+    .logo h1 span {
+        background: #e7d7c4;
+        font-size: 0.9rem;
+        padding: 0.2rem 0.75rem;
+        border-radius: 30px;
+        color: #5e4b38;
+        font-weight: 400;
+        margin-left: 0.6rem;
+    }
+
+
+    .search-section { display: flex; flex-direction: column; width: 100%; max-width: 420px; }
+    .search-box {
+        display: flex;
+        background: #fff;
+        border-radius: 60px;
+        box-shadow: 0 6px 14px rgba(0,0,0,0.03), 0 2px 6px rgba(0,0,0,0.05);
+        padding: 0.2rem 0.2rem 0.2rem 1.2rem;
+        border: 1px solid #e4d5c0;
+        align-items: center;
+    }
+    .search-box input {
+        flex: 1;
+        padding: 0.75rem 0;
+        border: none;
+        outline: none;
+        font-size: 1rem;      /* ≥16px 防 iOS 缩放 */
+        background: transparent;
+        color: #2e241c;
+        min-width: 0;
+        font-family: inherit;
+    }
+    .search-box input::placeholder { color: #b7aa9b; font-style: italic; }
+    .search-box button {
+        background: #c7ad8a;
+        border: 1px solid #bda37e;
+        border-radius: 60px;
+        padding: 0.7rem 1.4rem;
+        font-weight: 500;
+        color: #2e241c;
+        cursor: pointer;
+        transition: 0.15s ease;
+        font-size: 0.95rem;
+        white-space: nowrap;
+        font-family: inherit;
+        flex-shrink: 0;
+    }
+    .search-box button:hover { background: #b69772; color: #1f160f; }
+    .search-hint {
+        font-size: 0.75rem;
+        color: #9b8a79;
+        margin-top: 0.5rem;
+        margin-left: 0.9rem;
+        font-style: italic;
+    }
+
+
+    .status-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.8rem;
+        margin: 0.9rem 0 1rem;
+        color: #7f6e5c;
+        font-size: 0.9rem;
+        background: #ede6dc;
+        padding: 0.5rem 1rem;
+        border-radius: 30px;
+    }
+    #resultCount { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .clear-search {
+        background: none;
+        border: none;
+        color: #a58d73;
+        text-decoration: underline dotted;
+        cursor: pointer;
+        font-size: 0.88rem;
+        padding: 0.2rem 0.4rem;
+        font-family: inherit;
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+    .clear-search:hover { color: #6e5a45; }
+
+
+    .wiki-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+        gap: 1.4rem;
+        margin-top: 0.5rem;
+        align-items: stretch;   
+    }
+
+
+    .entry-card {
+        background: #fff;
+        border-radius: 22px;
+        padding: 1.3rem 1.3rem 1.1rem;
+        box-shadow: 0 10px 20px -8px rgba(80,60,40,0.12), 0 4px 8px rgba(0,0,0,0.02);
+        border: 1px solid #f0e4d6;
+        transition: box-shadow 0.18s ease, transform 0.18s ease, border-color 0.18s ease;
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+    }
+    .entry-card:hover {
+        box-shadow: 0 18px 28px -10px rgba(80,60,40,0.18);
+        border-color: #dcccb8;
+        transform: translateY(-2px);
+    }
+
+  
+    .entry-title {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.35rem;
+        min-height: 3.3rem;         
+        margin-bottom: 0.65rem;
+    }
+    .entry-title .pin { font-size: 1rem; line-height: 1.3; flex-shrink: 0; }
+    .entry-link {
+        flex: 1;
+        min-width: 0;
+        font-size: 1.25rem;
+        font-weight: 650;
+        line-height: 1.3;
+        color: #3f2e21;
+        text-decoration: none;
+        /* 折叠：最多 2 行 */
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    .entry-link:hover { color: #8b5e34; }
+
+
+    .entry-body {
+        font-size: 0.95rem;
+        line-height: 1.7;
+        color: #4c3f33;
+        border-left: 3px solid #e9dacb;
+        padding-left: 0.85rem;
+        margin-bottom: 0.85rem;
+        min-height: 6.5rem;         
+        position: relative;
+
+        display: -webkit-box;
+        -webkit-line-clamp: 4;
+        line-clamp: 4;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        word-break: break-word;
+    }
+
+    .entry-body::after {
+        content: "";
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        width: 2.4rem;
+        height: 1.7rem;
+        background: linear-gradient(to right, rgba(255,255,255,0), #fff 75%);
+        pointer-events: none;
+    }
+
+
+    .entry-keywords {
+        display: flex;
+        flex-wrap: nowrap;
+        gap: 0.45rem;
+        height: 1.9rem;
+        align-items: center;
+        overflow: hidden;
+        margin-bottom: 0.75rem;
+    }
+    .keyword-badge {
+        background: #f1e8de;
+        color: #5b4a39;
+        font-size: 0.74rem;
+        padding: 0.24rem 0.75rem;
+        border-radius: 30px;
+        font-weight: 500;
+        letter-spacing: 0.2px;
+        border: 1px solid #e2d2c0;
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+    .keyword-badge.clickable { cursor: pointer; transition: background 0.12s, border-color 0.12s; }
+    .keyword-badge.clickable:hover { background: #e4d5c2; border-color: #cdb79e; color: #3f2a12; }
+
+  
+    .related-links {
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.82rem;
+        height: 2.3rem;
+        padding-top: 0.7rem;
+        border-top: 1px dashed #e4d6c8;
+        color: #7b6a5a;
+        overflow: hidden;
+        white-space: nowrap;
+    }
+    .related-label { font-weight: 500; color: #958471; flex-shrink: 0; }
+    .related-link {
+        color: #8b6f52;
+        text-decoration: none;
+        border-bottom: 1px dotted #c9b6a2;
+        transition: color 0.1s, border-color 0.1s;
+        cursor: pointer;
+        font-weight: 450;
+        flex-shrink: 0;
+    }
+    .related-link:hover { color: #5e3e28; border-bottom-color: #5e3e28; }
+    .related-link.missing { color: #b3a494; border-bottom-style: dashed; }
+
+    .read-more {
+        margin-top: auto;            
+        align-self: flex-end;
+        font-size: 0.84rem;
+        color: #8b6f52;
+        text-decoration: none;
+        border-bottom: 1px dotted #c9b6a2;
+        transition: color 0.12s, border-color 0.12s;
+        padding-top: 0.55rem;
+        flex-shrink: 0;
+    }
+    .read-more:hover { color: #5e3e28; border-bottom-color: #5e3e28; }
+
+
+    .highlight {
+        background: #fdebd0;
+        color: #3f2a12;
+        font-weight: 600;
+        border-radius: 4px;
+        padding: 0 3px;
+    }
+    .empty-state {
+        grid-column: 1 / -1;
+        text-align: center;
+        padding: 3rem 1rem;
+        background: #f4ede5;
+        border-radius: 40px;
+        color: #8b7b6b;
+        font-size: 1.05rem;
+        border: 1px dashed #d4c3b2;
+        line-height: 1.7;
+    }
+
+
+    .back-home {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        color: #8b6f52;
+        text-decoration: none;
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+        padding: 0.38rem 0.95rem;
+        background: #efe7dc;
+        border-radius: 30px;
+        border: 1px solid #e0d2c0;
+        transition: background 0.15s, color 0.15s;
+    }
+    .back-home:hover { background: #e5d9c9; color: #5e3e28; }
+
+    .detail-card {
+        background: #fff;
+        border-radius: 28px;
+        padding: 2rem 2rem 1.8rem;
+        border: 1px solid #f0e4d6;
+        box-shadow: 0 14px 30px -12px rgba(80,60,40,0.16), 0 4px 10px rgba(0,0,0,0.02);
+    }
+    .detail-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #3f2e21;
+        line-height: 1.28;
+        display: flex;
+        align-items: flex-start;
+        gap: 0.5rem;
+        word-break: break-word;
+    }
+    .detail-title .pin { font-size: 1.5rem; line-height: 1.28; flex-shrink: 0; }
+    .detail-meta {
+        font-size: 0.78rem;
+        color: #a99a89;
+        margin: 0.55rem 0 1.5rem;
+        letter-spacing: 0.3px;
+        border-bottom: 1px dashed #ece0d2;
+        padding-bottom: 0.9rem;
+    }
+    .detail-body {
+        font-size: 1.06rem;
+        line-height: 1.9;
+        color: #43372c;
+        white-space: pre-wrap;
+        border-left: 4px solid #e9dacb;
+        padding-left: 1.15rem;
+        margin-bottom: 1.8rem;
+        word-break: break-word;
+    }
+    .detail-keywords {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 2rem;
+    }
+    .detail-keywords .keyword-badge { font-size: 0.8rem; padding: 0.3rem 0.85rem; }
+    .section-label { font-size: 0.88rem; color: #958471; font-weight: 600; margin-right: 0.2rem; }
+
+    .section-title {
+        font-size: 1.02rem;
+        color: #5b4231;
+        margin-bottom: 0.9rem;
+        font-weight: 650;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+    }
+    .section-title::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: #ede0d2;
+        margin-left: 0.5rem;
+    }
+    .related-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+        gap: 0.9rem;
+        margin-bottom: 1.6rem;
+    }
+    .related-item {
+        display: block;
+        padding: 0.85rem 1rem;
+        background: #faf6f0;
+        border-radius: 16px;
+        border: 1px solid #efe4d7;
+        text-decoration: none;
+        color: inherit;
+        transition: background 0.15s, border-color 0.15s, transform 0.15s;
+    }
+    .related-item:hover { background: #f5ede3; border-color: #ddcbb6; transform: translateX(3px); }
+    .related-item-title { font-weight: 650; color: #5b4231; font-size: 0.96rem; }
+    .related-item-desc { font-size: 0.81rem; color: #8b7b6b; margin-top: 0.3rem; line-height: 1.55; }
+    .related-empty { color: #b3a494; font-size: 0.9rem; font-style: italic; margin-bottom: 1.6rem; }
+
+    .prev-next { display: flex; justify-content: space-between; gap: 1rem; margin-top: 1.6rem; }
+    .prev-next a {
+        flex: 1;
+        min-width: 0;
+        display: block;
+        padding: 0.85rem 1.1rem;
+        background: #fff;
+        border-radius: 18px;
+        border: 1px solid #efe4d7;
+        text-decoration: none;
+        color: #6b573f;
+        font-size: 0.88rem;
+        transition: background 0.15s, border-color 0.15s;
+        box-shadow: 0 4px 10px -6px rgba(80,60,40,0.15);
+    }
+    .prev-next a:hover { background: #faf5ee; border-color: #ddcbb6; color: #4a3729; }
+    .prev-next .nav-label { display: block; font-size: 0.72rem; color: #b3a494; margin-bottom: 0.2rem; }
+    .prev-next .nav-title {
+        font-weight: 620;
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .prev-next a.next { text-align: right; }
+    .prev-next .placeholder { flex: 1; }
+
+
+    .not-found {
+        text-align: center;
+        padding: 4rem 1.5rem;
+        background: #fff;
+        border-radius: 28px;
+        border: 1px dashed #ddcdba;
+        color: #7f6e5c;
+        line-height: 1.8;
+    }
+    .not-found h2 { font-size: 1.5rem; margin-bottom: 0.8rem; color: #4a3729; }
+
+ 
+    .footer {
+        margin-top: 3.5rem;
+        font-size: 0.8rem;
+        color: #b3a494;
+        text-align: center;
+        border-top: 1px solid #e2d6ca;
+        padding-top: 1.5rem;
+        width: 100%;
+        line-height: 1.7;
+    }
+
+ 
+    @media (max-width: 860px) {
+        .wiki-grid { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.1rem; }
+    }
+
+    @media (max-width: 720px) {
+        body { padding: 1rem 0.8rem 1.6rem; }
+
+        .header {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 1rem;
+            margin-bottom: 1.2rem;
+        }
+        .logo h1 { font-size: 1.55rem; }
+        .logo h1 span { font-size: 0.75rem; padding: 0.15rem 0.6rem; margin-left: 0.4rem; }
+
+        .search-section { max-width: 100%; }
+        .search-box { padding: 0.18rem 0.18rem 0.18rem 1rem; }
+        .search-box input { padding: 0.68rem 0; font-size: 16px; }
+        .search-box button { padding: 0.62rem 1.1rem; font-size: 0.9rem; }
+        .search-hint { margin-left: 0.6rem; }
+
+        .status-bar { font-size: 0.82rem; padding: 0.45rem 0.85rem; margin: 0.8rem 0 0.9rem; }
+
+        .wiki-grid {
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+        .entry-card { padding: 1.15rem 1.05rem 1rem; border-radius: 20px; }
+
+        .entry-title { min-height: 3.05rem; margin-bottom: 0.55rem; }
+        .entry-link { font-size: 1.15rem; }
+
+        .entry-body {
+            font-size: 0.9rem;
+            line-height: 1.68;
+            min-height: calc(4 * 1.68 * 0.9rem);  /* ≈6.05rem */
+            padding-left: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+        .entry-body::after { height: 1.68rem; width: 2.2rem; }
+
+        .entry-keywords { height: 1.8rem; gap: 0.4rem; margin-bottom: 0.65rem; }
+        .keyword-badge { font-size: 0.71rem; padding: 0.22rem 0.68rem; }
+
+        .related-links { height: 2.2rem; font-size: 0.79rem; padding-top: 0.65rem; }
+
+   
+        .detail-card { padding: 1.35rem 1.15rem 1.25rem; border-radius: 22px; }
+        .detail-title { font-size: 1.5rem; gap: 0.4rem; }
+        .detail-title .pin { font-size: 1.2rem; }
+        .detail-meta { font-size: 0.73rem; margin: 0.45rem 0 1.2rem; }
+        .detail-body {
+            font-size: 0.98rem;
+            line-height: 1.85;
+            padding-left: 0.9rem;
+            border-left-width: 3px;
+            margin-bottom: 1.5rem;
+        }
+        .detail-keywords { margin-bottom: 1.6rem; }
+        .related-grid { grid-template-columns: 1fr; gap: 0.75rem; }
+
+        .prev-next { flex-direction: column; gap: 0.75rem; }
+        .prev-next a.next { text-align: left; }
+        .prev-next .placeholder { display: none; }
+
+        .footer { margin-top: 2.5rem; font-size: 0.74rem; }
+    }
+
+    @media (max-width: 380px) {
+        .logo h1 { font-size: 1.35rem; }
+        .entry-link { font-size: 1.05rem; }
+        .entry-title { min-height: 2.85rem; }
+        .entry-body { font-size: 0.86rem; min-height: calc(4 * 1.68 * 0.86rem); }
+        .keyword-badge { font-size: 0.68rem; padding: 0.2rem 0.6rem; }
+        .detail-title { font-size: 1.3rem; }
+        .detail-body { font-size: 0.94rem; }
+    }
+
+  
+    @media (hover: none) {
+        .entry-card:hover { transform: none; box-shadow: 0 10px 20px -8px rgba(80,60,40,0.12); border-color: #f0e4d6; }
+        .related-item:hover { transform: none; }
+    }
+</style>
+</head>
+<body>
+<div class="wiki-container">
+    <header class="header">
+        <div class="logo">
+            <a href="#/" class="logo-link"><h1>崇实2025级1班百科 <span>WIKI</span></h1></a>
+        </div>
+    </header>
+
+    <main id="viewContainer"></main>
+
+    <div class="footer">崇实2025级1班百科WIKI  by fengxing2202</div>
+</div>
+
+<script>
+/* =========================================================
+   made by fengxing2202   后期维测用，静态词条表单.葛乐！
+   ========================================================= */
+const entries = [
+    {
+        id: '0',
+        title: '一班WIKI词条征集',
+        body: '我们新建了此站，用于收录各种关于崇实2025级一班的百科词条，作为一班WIKI。我们希望广泛征集词条来扩充本站，可以是关于一班的一切，可以关于梗、人物、事件或是别的文章。如果你不确定具体的样式，可以看一些本站的其余词条，大概了解一下。投稿的词条可以包括:标题、正文、关键字(这会在搜索的算法里起作用)以及你想要关联的其它词条。无需担心本网站运营的持久性，它在2025级高中毕业前一定不会关闭，7*24H可以访问。最后编辑23/9/2026。fengxing2202。',
+        keywords: [],
+        related: []
+    },
+    {
+        id: 'gala0',
+        title: '葛乐',
+        body: '源于班级成员葛乐山同学。由于其严肃的状态和及其难绷的外表，其成为1班绷神，没有一个人对绷是可以绷过葛乐山的。在之后的传唱中，葛乐逐渐成为了对葛乐山的称呼，并且发展出了新的意思。葛乐可以是构成物质的基本微粒，也可以是一个物种，与人类齐名，据说葛乐山和葛乐水就是葛乐种族。于是葛乐成为了一种魔音，人们时常会不由自主地来上一句葛乐以相互打招呼。葛乐已经成为了1班最为热门的口头语。其后也衍生出大葛乐的叫法。最后编辑24/9/2026。fengxing2202。',
+        keywords: ['葛乐', '知名人物', '大葛乐', '葛乐山', '葛乐水'],
+        related: []
+    },
+    {
+        id: 'a0',
+        title: '起',
+        body: '源于崇实2025级非一班的李嘉起同学。由于其惊天地泣鬼神的作风，在全级部名声显赫。而由于其名字和一班李嘉辰同学很是相似，于是李嘉辰又被称为起，在班级中广为流传，成为一种口头语。最后编辑24/9/2026。fengxing2202。',
+        keywords: ['李嘉辰', '李嘉起', '起'],
+        related: []
+    },
+    {
+        id: 'a1',
+        title: '边走边吃',
+        body: '源于龙口一中有不能边走边吃的神奇校规。在2026年9月，一班有两位同学因为在食堂门口走而嘴里嚼东西，被综合科工作人员拍照上传学校工作群通报，被斥责为一班和崇实学部的耻辱。人们并不知道边走边吃到底是如何得不雅观和不得体，因此该事件如此火爆是因为其荒诞性令人忍俊不禁。最后编辑24/9/2026。fengxing2202。',
+        keywords: ['边走边吃', '吃大枣', '拍照'],
+        related: []
+    },
+
+];
+
+
+const viewContainer = document.getElementById('viewContainer');
+let currentQuery = '';
+let debounceTimer = null;
+let isComposing = false;  
+
+function escapeHtml(str) {
+    return String(str).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+}
+function escapeRegExp(string) {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function highlightText(text, query) {
+    if (!query || !query.trim()) return escapeHtml(text);
+    const q = query.trim();
+    const re = new RegExp(`(${escapeRegExp(q)})`, 'gi');
+    return escapeHtml(text).replace(re, '<span class="highlight">$1</span>');
+}
+function excerpt(text, n = 64) {
+    return text.length > n ? text.slice(0, n) + '…' : text;
+}
+
+
+function getMatchScore(entry, query) {
+    const q = query.trim().toLowerCase();
+    if (!q) return 0;
+    let score = 0;
+    if (entry.title.toLowerCase().includes(q)) score += 100;
+    if (entry.keywords.some(kw => kw.toLowerCase().includes(q))) score += 50;
+    if (entry.body.toLowerCase().includes(q)) score += 20;
+    return score;
+}
+function filterAndSortEntries(query) {
+    const q = query.trim();
+    if (!q) return [...entries];
+    return entries
+        .map(entry => ({ entry, score: getMatchScore(entry, q) }))
+        .filter(item => item.score > 0)
+        .sort((a, b) => b.score - a.score)
+        .map(item => item.entry);
+}
+
+
+function renderHome() {
+    document.title = '崇实2025级1班· 百科WIKI';
+
+    const filtered = filterAndSortEntries(currentQuery);
+    const q = currentQuery.trim();
+
+    viewContainer.innerHTML = `
+        <div class="home-view">
+            <div class="search-section">
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="搜梗、搜关键字、搜正文..."
+                           autocomplete="off" value="${escapeHtml(currentQuery)}">
+                    <button id="searchBtn">🔍 搜索</button>
+                </div>
+                <div class="search-hint">站长:fengxing2202</div>
+            </div>
+
+            <div class="status-bar">
+                <span id="resultCount">共 ${filtered.length} 个词条${q ? `（搜索「${escapeHtml(q)}」）` : ''}</span>
+                <button class="clear-search" id="clearSearchBtn">清除搜索</button>
+            </div>
+
+            <div class="wiki-grid" id="wikiGrid"></div>
+        </div>
+    `;
+
+    const grid = document.getElementById('wikiGrid');
+
+    if (filtered.length === 0) {
+        grid.innerHTML = `<div class="empty-state">😶 没有找到匹配的词条<br>也许你应该试试别的？</div>`;
+        return;
+    }
+
+    grid.innerHTML = filtered.map(entry => {
+        const titleHtml = q ? highlightText(entry.title, q) : escapeHtml(entry.title);
+        const bodyHtml  = q ? highlightText(entry.body, q)  : escapeHtml(entry.body);
+        const kwHtml = entry.keywords.map(kw =>
+            `<span class="keyword-badge clickable" data-search-term="${escapeHtml(kw)}">${
+                q ? highlightText(kw, q) : escapeHtml(kw)
+            }</span>`
+        ).join('');
+        const relHtml = entry.related.map(title => relatedLinkHtml(title)).join('');
+
+        return `
+            <article class="entry-card">
+                <h3 class="entry-title">
+                    <span class="pin">📌</span>
+                    <a class="entry-link" href="#/entry/${entry.id}">${titleHtml}</a>
+                </h3>
+                <div class="entry-body">${bodyHtml}</div>
+                <div class="entry-keywords">${kwHtml}</div>
+                <div class="related-links">
+                    <span class="related-label">🔗 关联：</span>
+                    ${relHtml || '<span style="color:#b7aa9b;">暂无</span>'}
+                </div>
+                <a class="read-more" href="#/entry/${entry.id}">阅读全文 →</a>
+            </article>
+        `;
+    }).join('');
+}
+
+
+function relatedLinkHtml(title) {
+    const target = entries.find(e => e.title === title);
+    if (target) {
+        return `<a class="related-link" href="#/entry/${target.id}">${escapeHtml(title)}</a>`;
+    }
+    return `<span class="related-link missing" data-search-term="${escapeHtml(title)}">${escapeHtml(title)}</span>`;
+}
+
+
+function renderDetail(id) {
+    const entry = entries.find(e => e.id === id);
+
+    if (!entry) {
+        renderNotFound(id);
+        return;
+    }
+
+    document.title = `${entry.title} · 崇实2025级1班百科`;
+
+    const idx = entries.findIndex(e => e.id === id);
+    const prev = idx > 0 ? entries[idx - 1] : null;
+    const next = idx < entries.length - 1 ? entries[idx + 1] : null;
+
+    const forward = entry.related
+        .map(title => entries.find(e => e.title === title))
+        .filter(Boolean);
+    const backward = entries.filter(e => e.id !== entry.id && e.related.includes(entry.title));
+
+    const seen = new Set([entry.id]);
+    const relatedList = [];
+    [...forward, ...backward].forEach(e => {
+        if (!seen.has(e.id)) { seen.add(e.id); relatedList.push(e); }
+    });
+
+    const relatedHtml = relatedList.length
+        ? `<div class="related-grid">${relatedList.map(e => `
+                <a class="related-item" href="#/entry/${e.id}">
+                    <div class="related-item-title">${escapeHtml(e.title)}</div>
+                    <div class="related-item-desc">${escapeHtml(excerpt(e.body, 58))}</div>
+                </a>`).join('')}</div>`
+        : `<div class="related-empty">暂无关联词条</div>`;
+
+    const keywordsHtml = entry.keywords.map(kw =>
+        `<span class="keyword-badge clickable" data-search-term="${escapeHtml(kw)}">${escapeHtml(kw)}</span>`
+    ).join('');
+
+    viewContainer.innerHTML = `
+        <div class="detail-view">
+            <a class="back-home" href="#/">← 返回词条列表</a>
+
+            <article class="detail-card">
+                <h1 class="detail-title">
+                    <span class="pin">📌</span>
+                    <span>${escapeHtml(entry.title)}</span>
+                </h1>
+                <div class="detail-meta">词条编号 ${entry.id.toUpperCase()} · 正文 ${entry.body.length} 字 · ${entry.keywords.length} 个关键字</div>
+
+                <div class="detail-body">${escapeHtml(entry.body)}</div>
+
+                <div class="detail-keywords">
+                    <span class="section-label">关键字：</span>
+                    ${keywordsHtml || '<span style="color:#b7aa9b;">无</span>'}
+                </div>
+
+                <h2 class="section-title">🔗 关联词条</h2>
+                ${relatedHtml}
+            </article>
+
+            <nav class="prev-next">
+                ${prev
+                    ? `<a href="#/entry/${prev.id}"><span class="nav-label">← 上一个词条</span><span class="nav-title">${escapeHtml(prev.title)}</span></a>`
+                    : `<span class="placeholder"></span>`}
+                ${next
+                    ? `<a class="next" href="#/entry/${next.id}"><span class="nav-label">下一个词条 →</span><span class="nav-title">${escapeHtml(next.title)}</span></a>`
+                    : `<span class="placeholder"></span>`}
+            </nav>
+        </div>
+    `;
+}
+
+
+function renderNotFound(id) {
+    document.title = '词条不存在 · 崇实2025级1班百科';
+    viewContainer.innerHTML = `
+        <div class="not-found">
+            <h2> 没有找到这个词条</h2>
+            <p>编号「${escapeHtml(id)}」不存在，可能链接已失效或词条尚未收录</p>
+            <p style="margin-top:1.4rem;">
+                <a class="back-home" href="#/">← 返回词条列表</a>
+            </p>
+        </div>
+    `;
+}
+
+
+function router() {
+    const hash = decodeURIComponent(window.location.hash.replace(/^#/, ''));
+
+    if (hash.startsWith('/entry/')) {
+        renderDetail(hash.slice('/entry/'.length));
+    } else {
+        renderHome();
+    }
+    window.scrollTo({ top: 0, behavior: 'auto' });
+}
+
+
+function doSearch(query) {
+    currentQuery = query;
+    const hash = window.location.hash;
+    if (hash && hash !== '#/' && hash !== '#') {
+        window.location.hash = '#/';   // 触发 hashchange → router → renderHome
+    } else {
+        renderHome();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+}
+
+
+
+
+viewContainer.addEventListener('compositionstart', (e) => {
+    if (e.target && e.target.id === 'searchInput') {
+        isComposing = true;
+        clearTimeout(debounceTimer);   // 取消可能存在的防抖
+    }
+}, true);  
+viewContainer.addEventListener('compositionend', (e) => {
+    if (e.target && e.target.id === 'searchInput') {
+        isComposing = false;
+       
+        const val = e.target.value;
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+            if (val !== currentQuery) doSearch(val);
+        }, 80);
+    }
+}, true);
+
+
+viewContainer.addEventListener('click', (e) => {
+    if (e.target.closest('#searchBtn')) {
+        const input = document.getElementById('searchInput');
+        doSearch(input ? input.value : '');
+        return;
+    }
+    if (e.target.closest('#clearSearchBtn')) {
+        doSearch('');
+        return;
+    }
+    const searchTermEl = e.target.closest('[data-search-term]');
+    if (searchTermEl) {
+        e.preventDefault();
+        doSearch(searchTermEl.dataset.searchTerm);
+    }
+});
+
+
+viewContainer.addEventListener('keydown', (e) => {
+    if (e.target.id === 'searchInput' && e.key === 'Enter') {
+        if (isComposing || e.isComposing || e.keyCode === 229) return;  
+        e.preventDefault();
+        clearTimeout(debounceTimer);
+        doSearch(e.target.value);
+    }
+});
+
+
+viewContainer.addEventListener('input', (e) => {
+    if (e.target.id !== 'searchInput') return;
+    if (isComposing || e.isComposing) return;   
+
+    clearTimeout(debounceTimer);
+    const val = e.target.value;
+    debounceTimer = setTimeout(() => {
+        if (val !== currentQuery) doSearch(val);
+    }, 300);
+});
+
+
+window.addEventListener('hashchange', router);
+router();
+</script>
+</body>
+</html>
