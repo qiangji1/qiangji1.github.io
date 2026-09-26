@@ -1,0 +1,1840 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>崇实2025级1班 · WIKI</title>
+<style>
+
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+        background: #0a0e1a;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: 100vh;
+        padding: 1.5rem 1rem 2rem;
+        font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+        color: #fff;
+        position: relative;
+        overflow-x: hidden;
+    }
+    body.intro-locked { overflow: hidden; }
+
+    /* ============================================================
+       v0.1.0p addition  可能会有problems
+       ============================================================ */
+    .intro-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        background: #0a0e1a;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+
+        clip-path: inset(0 0 0 0);
+        transition: clip-path 1.15s cubic-bezier(0.76, 0, 0.24, 1);
+        will-change: clip-path;
+    }
+    .intro-overlay::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+            radial-gradient(ellipse 60% 50% at 50% 45%, rgba(120,90,255,0.16), transparent 70%),
+            radial-gradient(ellipse 40% 40% at 70% 70%, rgba(255,110,180,0.10), transparent 70%),
+            linear-gradient(180deg, #0a0e1a 0%, #0d1224 60%, #0a0e1a 100%);
+    }
+
+    .intro-overlay::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: repeating-linear-gradient(
+            180deg,
+            rgba(255,255,255,0.014) 0px,
+            rgba(255,255,255,0.014) 1px,
+            transparent 1px,
+            transparent 3px
+        );
+        pointer-events: none;
+        opacity: 0.6;
+    }
+
+    .intro-overlay.done {
+        clip-path: inset(0 0 100% 0);
+    }
+
+    .intro-inner {
+        position: relative;
+        z-index: 2;
+        text-align: center;
+        padding: 0 1.5rem;
+        transform: translateY(0);
+        opacity: 1;
+        transition: opacity 0.55s ease, transform 0.7s cubic-bezier(0.76, 0, 0.24, 1);
+    }
+    .intro-overlay.done .intro-inner {
+        opacity: 0;
+        transform: translateY(-26px);
+    }
+
+    .intro-title {
+        font-size: clamp(1.85rem, 6.4vw, 4.2rem);
+        font-weight: 650;
+        letter-spacing: 0.16em;
+        line-height: 1.25;
+        color: #ffffff;
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        padding-left: 0.16em;   /* 这个是2a引用，复制的代码可能有问题，千万别忘了 */
+        user-select: none;
+    }
+    .intro-char {
+        display: inline-block;
+        opacity: 0;
+        transform: translateY(62%) scale(0.94);
+        filter: blur(14px);
+        animation: charIn 1.05s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        text-shadow:
+            0 0 34px rgba(140,110,255,0.42),
+            0 0 70px rgba(140,110,255,0.20),
+            0 6px 44px rgba(0,0,0,0.55);
+        will-change: opacity, transform, filter;
+    }
+    @keyframes charIn {
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            filter: blur(0);
+        }
+    }
+
+    .intro-line {
+        height: 1px;
+        width: 0;
+        margin: 1.4rem auto 1.25rem;
+        background: linear-gradient(to right,
+            transparent 0%,
+            rgba(255,215,140,0.15) 15%,
+            rgba(255,215,140,0.85) 50%,
+            rgba(255,215,140,0.15) 85%,
+            transparent 100%);
+        box-shadow: 0 0 18px rgba(255,215,140,0.4);
+        animation: lineExpand 1.15s cubic-bezier(0.76, 0, 0.24, 1) 1.05s forwards;
+    }
+    @keyframes lineExpand {
+        to { width: min(380px, 66vw); }
+    }
+
+    .intro-subtitle {
+        font-size: clamp(0.68rem, 1.9vw, 0.8rem);
+        letter-spacing: 0.62em;
+        color: rgba(255,255,255,0.52);
+        text-transform: uppercase;
+        padding-left: 0.62em;
+        opacity: 0;
+        transform: translateY(10px);
+        animation: subIn 0.95s cubic-bezier(0.22, 1, 0.36, 1) 1.5s forwards;
+        user-select: none;
+    }
+    @keyframes subIn {
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .bg-layer {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        background-image: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+        background-size: cover, cover;
+        background-position: center, center;
+        background-repeat: no-repeat;
+        will-change: transform;
+        animation: bgSlowZoom 30s ease-in-out infinite alternate;
+    }
+    .bg-layer.has-image {
+        background-image: var(--bg-image, none),
+            linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    }
+    @keyframes bgSlowZoom {
+        from { transform: scale(1.02); }
+        to   { transform: scale(1.10); }
+    }
+
+    .bg-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 1;
+        background:
+            radial-gradient(ellipse at 20% 0%, rgba(120,80,255,0.35), transparent 55%),
+            radial-gradient(ellipse at 85% 100%, rgba(255,90,160,0.28), transparent 55%),
+            linear-gradient(135deg, rgba(8,10,26,0.78) 0%, rgba(20,12,48,0.62) 50%, rgba(6,14,36,0.80) 100%);
+        pointer-events: none;
+    }
+
+    .bg-blobs {
+        position: fixed;
+        inset: 0;
+        z-index: 1;
+        overflow: hidden;
+        pointer-events: none;
+    }
+    .blob {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(90px);
+        opacity: 0.55;
+        will-change: transform;
+    }
+    .blob1 {
+        width: 420px; height: 420px;
+        background: radial-gradient(circle, rgba(130,90,255,0.75), transparent 70%);
+        top: -120px; left: -120px;
+        animation: float1 22s ease-in-out infinite;
+    }
+    .blob2 {
+        width: 520px; height: 520px;
+        background: radial-gradient(circle, rgba(255,110,180,0.55), transparent 70%);
+        bottom: -180px; right: -140px;
+        animation: float2 26s ease-in-out infinite;
+    }
+    .blob3 {
+        width: 360px; height: 360px;
+        background: radial-gradient(circle, rgba(70,200,255,0.55), transparent 70%);
+        top: 42%; left: 52%;
+        animation: float3 30s ease-in-out infinite;
+    }
+    @keyframes float1 {
+        0%,100% { transform: translate(0,0) scale(1); }
+        50%     { transform: translate(90px,60px) scale(1.15); }
+    }
+    @keyframes float2 {
+        0%,100% { transform: translate(0,0) scale(1); }
+        50%     { transform: translate(-100px,-70px) scale(1.1); }
+    }
+    @keyframes float3 {
+        0%,100% { transform: translate(0,0) scale(1); }
+        50%     { transform: translate(-70px,80px) scale(0.9); }
+    }
+
+    .wiki-container {
+        max-width: 1100px;
+        width: 100%;
+        position: relative;
+        z-index: 2;
+    }
+
+    @keyframes slideDown {
+        from { opacity: 0; transform: translateY(-22px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(28px) scale(0.985); }
+        to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to   { opacity: 1; }
+    }
+
+
+    .header {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.6rem;
+        padding-bottom: 0.8rem;
+        border-bottom: 3px dashed rgba(255,255,255,0.20);
+        animation: slideDown 0.75s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+    .logo-link { text-decoration: none; color: inherit; }
+    .logo h1 {
+        font-size: 2.1rem;
+        font-weight: 700;
+        color: #ffffff;
+        letter-spacing: -0.5px;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 0.3rem;
+        line-height: 1.2;
+        text-shadow: 0 4px 26px rgba(0,0,0,0.55), 0 1px 0 rgba(255,255,255,0.15);
+    }
+    .logo h1 span {
+        background: rgba(255,255,255,0.14);
+        -webkit-backdrop-filter: blur(14px) saturate(180%);
+        backdrop-filter: blur(14px) saturate(180%);
+        border: 1px solid rgba(255,255,255,0.28);
+        font-size: 0.9rem;
+        padding: 0.2rem 0.75rem;
+        border-radius: 30px;
+        color: #fff;
+        font-weight: 400;
+        margin-left: 0.6rem;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.35);
+    }
+
+ 
+    .search-section {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        max-width: 420px;
+        animation: fadeInUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.12s both;
+    }
+    .search-box {
+        display: flex;
+        background: rgba(255,255,255,0.10);
+        -webkit-backdrop-filter: blur(24px) saturate(180%);
+        backdrop-filter: blur(24px) saturate(180%);
+        border-radius: 60px;
+        box-shadow:
+            0 8px 32px rgba(0,0,0,0.35),
+            inset 0 1px 0 rgba(255,255,255,0.40),
+            inset 0 -1px 0 rgba(255,255,255,0.08);
+        padding: 0.2rem 0.2rem 0.2rem 1.2rem;
+        border: 1px solid rgba(255,255,255,0.25);
+        align-items: center;
+        transition: box-shadow 0.3s ease, border-color 0.3s ease, background 0.3s ease;
+    }
+    .search-box:focus-within {
+        border-color: rgba(255,215,140,0.65);
+        background: rgba(255,255,255,0.14);
+        box-shadow:
+            0 8px 32px rgba(0,0,0,0.40),
+            0 0 0 4px rgba(255,215,140,0.14),
+            inset 0 1px 0 rgba(255,255,255,0.45);
+    }
+    .search-box input {
+        flex: 1;
+        padding: 0.75rem 0;
+        border: none;
+        outline: none;
+        font-size: 1rem;
+        background: transparent;
+        color: #ffffff;
+        min-width: 0;
+        font-family: inherit;
+    }
+    .search-box input::placeholder { color: rgba(255,255,255,0.45); font-style: italic; }
+    .search-box button {
+        background: linear-gradient(135deg, rgba(255,255,255,0.38), rgba(255,255,255,0.14));
+        -webkit-backdrop-filter: blur(10px);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.42);
+        border-radius: 60px;
+        padding: 0.7rem 1.4rem;
+        font-weight: 600;
+        color: #ffffff;
+        cursor: pointer;
+        transition: transform 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+        font-size: 0.95rem;
+        white-space: nowrap;
+        font-family: inherit;
+        flex-shrink: 0;
+        box-shadow: 0 4px 18px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.55);
+        text-shadow: 0 1px 4px rgba(0,0,0,0.25);
+    }
+    .search-box button:hover {
+        background: linear-gradient(135deg, rgba(255,255,255,0.55), rgba(255,255,255,0.22));
+        transform: translateY(-1px);
+        box-shadow: 0 6px 22px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.65);
+    }
+    .search-box button:active { transform: translateY(0) scale(0.98); }
+    .search-hint {
+        font-size: 0.75rem;
+        color: rgba(255,255,255,0.55);
+        margin-top: 0.5rem;
+        margin-left: 0.9rem;
+        font-style: italic;
+        letter-spacing: 0.2px;
+    }
+
+ 
+    .status-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.8rem;
+        margin: 0.9rem 0 1rem;
+        color: rgba(255,255,255,0.80);
+        font-size: 0.9rem;
+        background: rgba(255,255,255,0.08);
+        -webkit-backdrop-filter: blur(18px) saturate(180%);
+        backdrop-filter: blur(18px) saturate(180%);
+        border: 1px solid rgba(255,255,255,0.18);
+        padding: 0.5rem 1rem;
+        border-radius: 30px;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.28);
+        animation: fadeInUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.2s both;
+    }
+    #resultCount { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .clear-search {
+        background: none;
+        border: none;
+        color: rgba(255,215,140,0.9);
+        text-decoration: underline dotted;
+        cursor: pointer;
+        font-size: 0.88rem;
+        padding: 0.2rem 0.4rem;
+        font-family: inherit;
+        white-space: nowrap;
+        flex-shrink: 0;
+        transition: color 0.15s;
+    }
+    .clear-search:hover { color: #fff3c4; }
+
+   
+    .wiki-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+        gap: 1.4rem;
+        margin-top: 0.5rem;
+        align-items: stretch;
+    }
+
+    .entry-card {
+        position: relative;
+        background: rgba(255,255,255,0.085);
+        -webkit-backdrop-filter: blur(24px) saturate(185%);
+        backdrop-filter: blur(24px) saturate(185%);
+        border-radius: 24px;
+        padding: 0 0 1.1rem;
+        border: 1px solid rgba(255,255,255,0.22);
+        box-shadow:
+            0 10px 36px rgba(0,0,0,0.38),
+            inset 0 1px 0 rgba(255,255,255,0.42),
+            inset 0 -1px 0 rgba(255,255,255,0.07);
+        transition: box-shadow 0.28s ease, transform 0.28s ease, border-color 0.28s ease, background 0.28s ease;
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        overflow: hidden;
+        isolation: isolate;
+        animation: fadeInUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+    .entry-card::before {
+        content: "";
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 55%;
+        border-radius: 24px 24px 0 0;
+        background: linear-gradient(180deg, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0.02) 45%, rgba(255,255,255,0) 100%);
+        pointer-events: none;
+        z-index: 0;
+    }
+    .entry-card::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        padding: 1px;
+        background: linear-gradient(140deg,
+            rgba(255,255,255,0.75) 0%,
+            rgba(255,255,255,0.06) 28%,
+            rgba(255,255,255,0.04) 72%,
+            rgba(255,255,255,0.55) 100%);
+        -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+        -webkit-mask-composite: xor;
+                mask-composite: exclude;
+        pointer-events: none;
+        opacity: 0.85;
+        z-index: 3;
+    }
+    .entry-card > * { position: relative; z-index: 1; }
+
+    .entry-card:hover {
+        transform: translateY(-5px);
+        background: rgba(255,255,255,0.13);
+        border-color: rgba(255,255,255,0.35);
+        box-shadow:
+            0 22px 52px rgba(0,0,0,0.50),
+            0 0 30px rgba(140,110,255,0.18),
+            inset 0 1px 0 rgba(255,255,255,0.55),
+            inset 0 -1px 0 rgba(255,255,255,0.10);
+    }
+
+
+    .entry-cover {
+        position: relative;
+        width: 100%;
+        height: 160px;
+        overflow: hidden;
+        border-radius: 24px 24px 0 0;
+        flex-shrink: 0;
+        z-index: 1;
+    }
+    .entry-cover img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+        will-change: transform;
+    }
+    .entry-card:hover .entry-cover img { transform: scale(1.06); }
+    .entry-cover::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, rgba(10,14,26,0) 40%, rgba(10,14,26,0.55) 100%);
+        pointer-events: none;
+    }
+
+    .entry-card.has-cover .entry-title,
+    .entry-card.has-cover .entry-body,
+    .entry-card.has-cover .entry-keywords,
+    .entry-card.has-cover .related-links,
+    .entry-card.has-cover .read-more {
+        padding-left: 1.3rem;
+        padding-right: 1.3rem;
+    }
+    .entry-card.has-cover .entry-title { padding-top: 1rem; }
+
+    .entry-card:not(.has-cover) .entry-title {
+        padding: 1.3rem 1.3rem 0;
+    }
+
+
+    .entry-title {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.35rem;
+        min-height: 3.3rem;
+        margin-bottom: 0.65rem;
+    }
+    .entry-title .pin {
+        font-size: 1rem;
+        line-height: 1.3;
+        flex-shrink: 0;
+        filter: drop-shadow(0 2px 6px rgba(0,0,0,0.45));
+    }
+    .entry-link {
+        flex: 1;
+        min-width: 0;
+        font-size: 1.25rem;
+        font-weight: 650;
+        line-height: 1.3;
+        color: #ffffff;
+        text-decoration: none;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-shadow: 0 2px 14px rgba(0,0,0,0.45);
+        transition: color 0.18s ease;
+    }
+    .entry-link:hover { color: #ffe9a8; }
+
+
+    .entry-body {
+        font-size: 0.95rem;
+        line-height: 1.7;
+        color: rgba(255,255,255,0.84);
+        border-left: 3px solid rgba(255,255,255,0.28);
+        padding-left: 0.85rem;
+        margin: 0 1.3rem 0.85rem;
+        min-height: 6.5rem;
+        position: relative;
+        display: -webkit-box;
+        -webkit-line-clamp: 4;
+        line-clamp: 4;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        word-break: break-word;
+        -webkit-mask-image: linear-gradient(to bottom, #000 78%, rgba(0,0,0,0.35) 100%);
+        mask-image: linear-gradient(to bottom, #000 78%, rgba(0,0,0,0.35) 100%);
+    }
+    .entry-card.has-cover .entry-body { margin-left: 0; margin-right: 0; }
+
+ 
+    .entry-keywords {
+        display: flex;
+        flex-wrap: nowrap;
+        gap: 0.45rem;
+        height: 1.9rem;
+        align-items: center;
+        overflow: hidden;
+        margin: 0 1.3rem 0.75rem;
+    }
+    .entry-card.has-cover .entry-keywords { margin-left: 0; margin-right: 0; }
+    .keyword-badge {
+        background: rgba(255,255,255,0.14);
+        -webkit-backdrop-filter: blur(10px);
+        backdrop-filter: blur(10px);
+        color: rgba(255,255,255,0.94);
+        font-size: 0.74rem;
+        padding: 0.24rem 0.75rem;
+        border-radius: 30px;
+        font-weight: 500;
+        letter-spacing: 0.2px;
+        border: 1px solid rgba(255,255,255,0.26);
+        white-space: nowrap;
+        flex-shrink: 0;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.28);
+        transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+    }
+    .keyword-badge.clickable { cursor: pointer; }
+    .keyword-badge.clickable:hover {
+        background: rgba(255,255,255,0.30);
+        border-color: rgba(255,255,255,0.5);
+        color: #fff;
+    }
+
+
+    .related-links {
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.82rem;
+        height: 2.3rem;
+        margin: 0 1.3rem;
+        padding-top: 0.7rem;
+        border-top: 1px dashed rgba(255,255,255,0.20);
+        color: rgba(255,255,255,0.62);
+        overflow: hidden;
+        white-space: nowrap;
+    }
+    .entry-card.has-cover .related-links { margin-left: 0; margin-right: 0; }
+    .related-label { font-weight: 500; color: rgba(255,255,255,0.55); flex-shrink: 0; }
+    .related-link {
+        color: rgba(255,255,255,0.85);
+        text-decoration: none;
+        border-bottom: 1px dotted rgba(255,255,255,0.35);
+        transition: color 0.15s ease, border-color 0.15s ease;
+        cursor: pointer;
+        font-weight: 450;
+        flex-shrink: 0;
+    }
+    .related-link:hover { color: #ffe9a8; border-bottom-color: #ffe9a8; }
+    .related-link.missing { color: rgba(255,255,255,0.45); border-bottom-style: dashed; }
+
+    .read-more {
+        margin-top: auto;
+        align-self: flex-end;
+        margin-right: 1.3rem;
+        font-size: 0.84rem;
+        color: #ffe9a8;
+        text-decoration: none;
+        border-bottom: 1px dotted rgba(255,233,168,0.6);
+        transition: color 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+        padding-top: 0.55rem;
+        flex-shrink: 0;
+        text-shadow: 0 1px 8px rgba(0,0,0,0.35);
+    }
+    .entry-card.has-cover .read-more { margin-right: 1.3rem; }
+    .read-more:hover { color: #fff8dc; border-bottom-color: #fff8dc; transform: translateX(3px); }
+
+  
+    .highlight {
+        background: rgba(255,214,120,0.42);
+        color: #fffbe8;
+        font-weight: 700;
+        border-radius: 5px;
+        padding: 0 4px;
+        box-shadow: 0 0 14px rgba(255,214,120,0.45), inset 0 1px 0 rgba(255,255,255,0.4);
+        text-shadow: 0 1px 4px rgba(0,0,0,0.35);
+    }
+    .empty-state {
+        grid-column: 1 / -1;
+        text-align: center;
+        padding: 3rem 1rem;
+        background: rgba(255,255,255,0.08);
+        -webkit-backdrop-filter: blur(22px) saturate(180%);
+        backdrop-filter: blur(22px) saturate(180%);
+        border-radius: 40px;
+        color: rgba(255,255,255,0.80);
+        font-size: 1.05rem;
+        border: 1px dashed rgba(255,255,255,0.28);
+        line-height: 1.7;
+        box-shadow: 0 10px 36px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.3);
+        animation: fadeInUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+  
+    .back-home {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        color: rgba(255,255,255,0.88);
+        text-decoration: none;
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+        padding: 0.38rem 0.95rem;
+        background: rgba(255,255,255,0.10);
+        -webkit-backdrop-filter: blur(18px) saturate(180%);
+        backdrop-filter: blur(18px) saturate(180%);
+        border-radius: 30px;
+        border: 1px solid rgba(255,255,255,0.24);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.35);
+        transition: background 0.18s ease, color 0.18s ease, transform 0.18s ease;
+        animation: fadeInUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+    .back-home:hover { background: rgba(255,255,255,0.20); color: #fff; transform: translateX(-3px); }
+
+    .detail-card {
+        position: relative;
+        background: rgba(255,255,255,0.085);
+        -webkit-backdrop-filter: blur(26px) saturate(185%);
+        backdrop-filter: blur(26px) saturate(185%);
+        border-radius: 28px;
+        padding: 2rem 2rem 1.8rem;
+        border: 1px solid rgba(255,255,255,0.22);
+        box-shadow:
+            0 16px 48px rgba(0,0,0,0.42),
+            inset 0 1px 0 rgba(255,255,255,0.45),
+            inset 0 -1px 0 rgba(255,255,255,0.08);
+        overflow: hidden;
+        isolation: isolate;
+        animation: fadeInUp 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.05s both;
+    }
+    .detail-card::before {
+        content: "";
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 45%;
+        background: linear-gradient(180deg, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0) 100%);
+        pointer-events: none;
+        z-index: 0;
+    }
+    .detail-card::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        padding: 1px;
+        background: linear-gradient(140deg,
+            rgba(255,255,255,0.7) 0%,
+            rgba(255,255,255,0.05) 30%,
+            rgba(255,255,255,0.04) 70%,
+            rgba(255,255,255,0.5) 100%);
+        -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+        -webkit-mask-composite: xor;
+                mask-composite: exclude;
+        pointer-events: none;
+        opacity: 0.85;
+        z-index: 3;
+    }
+    .detail-card > * { position: relative; z-index: 1; }
+
+    .detail-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #ffffff;
+        line-height: 1.28;
+        display: flex;
+        align-items: flex-start;
+        gap: 0.5rem;
+        word-break: break-word;
+        text-shadow: 0 4px 24px rgba(0,0,0,0.5);
+    }
+    .detail-title .pin {
+        font-size: 1.5rem;
+        line-height: 1.28;
+        flex-shrink: 0;
+        filter: drop-shadow(0 2px 8px rgba(0,0,0,0.45));
+    }
+    .detail-meta {
+        font-size: 0.78rem;
+        color: rgba(255,255,255,0.55);
+        margin: 0.55rem 0 1.5rem;
+        letter-spacing: 0.3px;
+        border-bottom: 1px dashed rgba(255,255,255,0.18);
+        padding-bottom: 0.9rem;
+    }
+
+    .detail-cover {
+        width: 100%;
+        max-height: 400px;
+        overflow: hidden;
+        border-radius: 20px;
+        margin-bottom: 1.6rem;
+        border: 1px solid rgba(255,255,255,0.18);
+        box-shadow: 0 12px 36px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.28);
+        background: rgba(255,255,255,0.04);
+    }
+    .detail-cover img {
+        width: 100%;
+        height: 100%;
+        max-height: 400px;
+        object-fit: cover;
+        display: block;
+    }
+
+    .detail-body {
+        font-size: 1.06rem;
+        line-height: 1.9;
+        color: rgba(255,255,255,0.88);
+        white-space: pre-wrap;
+        border-left: 4px solid rgba(255,255,255,0.28);
+        padding-left: 1.15rem;
+        margin-bottom: 1.8rem;
+        word-break: break-word;
+        text-shadow: 0 1px 8px rgba(0,0,0,0.28);
+    }
+
+    .entry-section { margin-bottom: 2rem; }
+    .entry-section:last-child { margin-bottom: 1.6rem; }
+    .section-heading {
+        font-size: 1.25rem;
+        font-weight: 650;
+        color: #ffffff;
+        margin-bottom: 0.9rem;
+        padding-left: 0.85rem;
+        border-left: 4px solid rgba(255,215,140,0.85);
+        line-height: 1.4;
+        text-shadow: 0 2px 14px rgba(0,0,0,0.4);
+        letter-spacing: 0.2px;
+    }
+    .section-figure {
+        margin: 0 0 1rem;
+        border-radius: 16px;
+        overflow: hidden;
+        border: 1px solid rgba(255,255,255,0.18);
+        box-shadow: 0 10px 28px rgba(0,0,0,0.30), inset 0 1px 0 rgba(255,255,255,0.22);
+        background: rgba(255,255,255,0.04);
+    }
+    .section-figure img {
+        width: 100%;
+        height: auto;
+        display: block;
+    }
+    .section-figure figcaption {
+        font-size: 0.78rem;
+        color: rgba(255,255,255,0.55);
+        padding: 0.55rem 0.9rem;
+        background: rgba(0,0,0,0.18);
+        border-top: 1px solid rgba(255,255,255,0.08);
+        font-style: italic;
+    }
+    .section-content {
+        font-size: 1.02rem;
+        line-height: 1.9;
+        color: rgba(255,255,255,0.86);
+        text-shadow: 0 1px 8px rgba(0,0,0,0.25);
+        word-break: break-word;
+        white-space: pre-wrap;
+    }
+
+    .detail-keywords {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 2rem;
+    }
+    .detail-keywords .keyword-badge { font-size: 0.8rem; padding: 0.3rem 0.85rem; }
+    .section-label { font-size: 0.88rem; color: rgba(255,255,255,0.6); font-weight: 600; margin-right: 0.2rem; }
+
+    .section-title {
+        font-size: 1.02rem;
+        color: rgba(255,255,255,0.92);
+        margin-bottom: 0.9rem;
+        font-weight: 650;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        text-shadow: 0 1px 8px rgba(0,0,0,0.3);
+    }
+    .section-title::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: linear-gradient(to right, rgba(255,255,255,0.28), rgba(255,255,255,0.02));
+        margin-left: 0.5rem;
+    }
+    .related-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+        gap: 0.9rem;
+        margin-bottom: 1.6rem;
+    }
+    .related-item {
+        display: block;
+        padding: 0.85rem 1rem;
+        background: rgba(255,255,255,0.08);
+        -webkit-backdrop-filter: blur(14px) saturate(180%);
+        backdrop-filter: blur(14px) saturate(180%);
+        border-radius: 16px;
+        border: 1px solid rgba(255,255,255,0.20);
+        text-decoration: none;
+        color: inherit;
+        transition: background 0.18s ease, border-color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.20), inset 0 1px 0 rgba(255,255,255,0.28);
+        overflow: hidden;
+    }
+    .related-item:hover {
+        background: rgba(255,255,255,0.17);
+        border-color: rgba(255,255,255,0.38);
+        transform: translateX(4px);
+        box-shadow: 0 10px 28px rgba(0,0,0,0.30), inset 0 1px 0 rgba(255,255,255,0.40);
+    }
+    .related-item-title { font-weight: 650; color: #ffffff; font-size: 0.96rem; text-shadow: 0 1px 8px rgba(0,0,0,0.3); }
+    .related-item-desc { font-size: 0.81rem; color: rgba(255,255,255,0.65); margin-top: 0.3rem; line-height: 1.55; }
+    .related-empty { color: rgba(255,255,255,0.5); font-size: 0.9rem; font-style: italic; margin-bottom: 1.6rem; }
+
+    .prev-next { display: flex; justify-content: space-between; gap: 1rem; margin-top: 1.6rem; }
+    .prev-next a {
+        flex: 1;
+        min-width: 0;
+        display: block;
+        padding: 0.85rem 1.1rem;
+        background: rgba(255,255,255,0.09);
+        -webkit-backdrop-filter: blur(18px) saturate(180%);
+        backdrop-filter: blur(18px) saturate(180%);
+        border-radius: 18px;
+        border: 1px solid rgba(255,255,255,0.20);
+        text-decoration: none;
+        color: rgba(255,255,255,0.90);
+        font-size: 0.88rem;
+        transition: background 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.28);
+        animation: fadeInUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.12s both;
+    }
+    .prev-next a:hover {
+        background: rgba(255,255,255,0.18);
+        border-color: rgba(255,255,255,0.38);
+        color: #ffffff;
+        transform: translateY(-2px);
+    }
+    .prev-next .nav-label { display: block; font-size: 0.72rem; color: rgba(255,255,255,0.50); margin-bottom: 0.2rem; }
+    .prev-next .nav-title {
+        font-weight: 620;
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .prev-next a.next { text-align: right; }
+    .prev-next .placeholder { flex: 1; }
+
+ 
+    .not-found {
+        text-align: center;
+        padding: 4rem 1.5rem;
+        background: rgba(255,255,255,0.09);
+        -webkit-backdrop-filter: blur(24px) saturate(180%);
+        backdrop-filter: blur(24px) saturate(180%);
+        border-radius: 28px;
+        border: 1px dashed rgba(255,255,255,0.28);
+        color: rgba(255,255,255,0.75);
+        line-height: 1.8;
+        box-shadow: 0 14px 40px rgba(0,0,0,0.38), inset 0 1px 0 rgba(255,255,255,0.35);
+        animation: fadeInUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+    .not-found h2 { font-size: 1.5rem; margin-bottom: 0.8rem; color: #ffffff; }
+
+    .footer {
+        margin-top: 3.5rem;
+        font-size: 0.8rem;
+        color: rgba(255,255,255,0.48);
+        text-align: center;
+        border-top: 1px solid rgba(255,255,255,0.14);
+        padding-top: 1.5rem;
+        width: 100%;
+        line-height: 1.7;
+        position: relative;
+        z-index: 2;
+        animation: fadeIn 0.9s ease 0.35s both;
+    }
+
+ 
+    .music-btn {
+        position: fixed;
+        right: 20px;
+        bottom: 20px;
+        width: 54px;
+        height: 54px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.12);
+        -webkit-backdrop-filter: blur(22px) saturate(180%);
+        backdrop-filter: blur(22px) saturate(180%);
+        border: 1px solid rgba(255,255,255,0.30);
+        box-shadow:
+            0 10px 30px rgba(0,0,0,0.40),
+            inset 0 1px 0 rgba(255,255,255,0.45),
+            inset 0 -1px 0 rgba(255,255,255,0.10);
+        color: #ffffff;
+        font-size: 1.35rem;
+        cursor: pointer;
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.22s ease, background 0.22s ease, box-shadow 0.22s ease;
+        padding: 0;
+        line-height: 1;
+        animation: fadeIn 0.8s ease 0.6s both;
+        -webkit-tap-highlight-color: transparent;
+        user-select: none;
+    }
+    .music-btn:hover {
+        transform: scale(1.10);
+        background: rgba(255,255,255,0.22);
+        box-shadow:
+            0 12px 36px rgba(0,0,0,0.45),
+            0 0 24px rgba(255,215,140,0.30),
+            inset 0 1px 0 rgba(255,255,255,0.55);
+    }
+    .music-btn:active { transform: scale(0.94); }
+    .music-btn .music-icon {
+        display: inline-block;
+        transition: transform 0.2s ease;
+        filter: drop-shadow(0 1px 6px rgba(0,0,0,0.4));
+    }
+    .music-btn.playing {
+        background: rgba(255,215,140,0.22);
+        border-color: rgba(255,215,140,0.55);
+        box-shadow:
+            0 10px 30px rgba(0,0,0,0.40),
+            0 0 26px rgba(255,215,140,0.40),
+            inset 0 1px 0 rgba(255,255,255,0.55);
+        color: #fff4cc;
+    }
+    .music-btn.playing .music-icon { animation: musicSpin 4s linear infinite; }
+    @keyframes musicSpin { to { transform: rotate(360deg); } }
+
+    .music-btn.playing::after {
+        content: "";
+        position: absolute;
+        inset: -6px;
+        border-radius: 50%;
+        border: 2px solid rgba(255,215,140,0.55);
+        animation: pulseRing 2.2s ease-out infinite;
+        pointer-events: none;
+    }
+    @keyframes pulseRing {
+        0%   { transform: scale(0.85); opacity: 0.9; }
+        100% { transform: scale(1.35); opacity: 0; }
+    }
+    .music-btn.hidden { display: none; }
+
+  
+    @media (max-width: 860px) {
+        .wiki-grid { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.1rem; }
+    }
+
+    @media (max-width: 720px) {
+        body { padding: 1rem 0.8rem 5rem; }
+
+        .header {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 1rem;
+            margin-bottom: 1.2rem;
+        }
+        .logo h1 { font-size: 1.55rem; }
+        .logo h1 span { font-size: 0.75rem; padding: 0.15rem 0.6rem; margin-left: 0.4rem; }
+
+        .search-section { max-width: 100%; }
+        .search-box { padding: 0.18rem 0.18rem 0.18rem 1rem; }
+        .search-box input { padding: 0.68rem 0; font-size: 16px; }
+        .search-box button { padding: 0.62rem 1.1rem; font-size: 0.9rem; }
+        .search-hint { margin-left: 0.6rem; }
+
+        .status-bar { font-size: 0.82rem; padding: 0.45rem 0.85rem; margin: 0.8rem 0 0.9rem; }
+
+        .wiki-grid {
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+        .entry-card { border-radius: 20px; }
+        .entry-card::before { border-radius: 20px 20px 0 0; }
+        .entry-cover { height: 140px; border-radius: 20px 20px 0 0; }
+
+        .entry-card.has-cover .entry-title,
+        .entry-card.has-cover .entry-body,
+        .entry-card.has-cover .entry-keywords,
+        .entry-card.has-cover .related-links,
+        .entry-card.has-cover .read-more {
+            padding-left: 1.05rem;
+            padding-right: 1.05rem;
+        }
+        .entry-card:not(.has-cover) .entry-title { padding: 1.15rem 1.05rem 0; }
+        .entry-body { margin-left: 1.05rem; margin-right: 1.05rem; }
+        .entry-card.has-cover .entry-body { margin-left: 0; margin-right: 0; }
+        .entry-keywords { margin-left: 1.05rem; margin-right: 1.05rem; }
+        .entry-card.has-cover .entry-keywords { margin-left: 0; margin-right: 0; }
+        .related-links { margin-left: 1.05rem; margin-right: 1.05rem; }
+        .entry-card.has-cover .related-links { margin-left: 0; margin-right: 0; }
+        .read-more { margin-right: 1.05rem; }
+        .entry-card.has-cover .read-more { margin-right: 1.05rem; }
+
+        .entry-title { min-height: 3.05rem; margin-bottom: 0.55rem; }
+        .entry-card.has-cover .entry-title { padding-top: 0.9rem; }
+        .entry-link { font-size: 1.15rem; }
+
+        .entry-body {
+            font-size: 0.9rem;
+            line-height: 1.68;
+            min-height: calc(4 * 1.68 * 0.9rem);
+            padding-left: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .entry-keywords { height: 1.8rem; gap: 0.4rem; margin-bottom: 0.65rem; }
+        .keyword-badge { font-size: 0.71rem; padding: 0.22rem 0.68rem; }
+
+        .related-links { height: 2.2rem; font-size: 0.79rem; padding-top: 0.65rem; }
+
+        .detail-card { padding: 1.35rem 1.15rem 1.25rem; border-radius: 22px; }
+        .detail-title { font-size: 1.5rem; gap: 0.4rem; }
+        .detail-title .pin { font-size: 1.2rem; }
+        .detail-meta { font-size: 0.73rem; margin: 0.45rem 0 1.2rem; }
+        .detail-cover { max-height: 240px; border-radius: 14px; margin-bottom: 1.3rem; }
+        .detail-cover img { max-height: 240px; }
+        .detail-body {
+            font-size: 0.98rem;
+            line-height: 1.85;
+            padding-left: 0.9rem;
+            border-left-width: 3px;
+            margin-bottom: 1.5rem;
+        }
+        .section-heading { font-size: 1.1rem; }
+        .section-content { font-size: 0.96rem; }
+        .detail-keywords { margin-bottom: 1.6rem; }
+        .related-grid { grid-template-columns: 1fr; gap: 0.75rem; }
+
+        .prev-next { flex-direction: column; gap: 0.75rem; }
+        .prev-next a.next { text-align: left; }
+        .prev-next .placeholder { display: none; }
+
+        .footer { margin-top: 2.5rem; font-size: 0.74rem; }
+
+        .music-btn { width: 48px; height: 48px; font-size: 1.2rem; right: 14px; bottom: 14px; }
+
+        .blob { filter: blur(70px); opacity: 0.45; }
+        .blob1 { width: 280px; height: 280px; }
+        .blob2 { width: 340px; height: 340px; }
+        .blob3 { width: 240px; height: 240px; }
+
+        .intro-line { margin: 1rem auto 0.95rem; }
+    }
+
+    @media (max-width: 380px) {
+        .logo h1 { font-size: 1.35rem; }
+        .entry-link { font-size: 1.05rem; }
+        .entry-title { min-height: 2.85rem; }
+        .entry-body { font-size: 0.86rem; min-height: calc(4 * 1.68 * 0.86rem); }
+        .keyword-badge { font-size: 0.68rem; padding: 0.2rem 0.6rem; }
+        .detail-title { font-size: 1.3rem; }
+        .detail-body { font-size: 0.94rem; }
+        .section-heading { font-size: 1rem; }
+    }
+
+    @media (hover: none) {
+        .entry-card:hover {
+            transform: none;
+            background: rgba(255,255,255,0.085);
+            border-color: rgba(255,255,255,0.22);
+            box-shadow:
+                0 10px 36px rgba(0,0,0,0.38),
+                inset 0 1px 0 rgba(255,255,255,0.42),
+                inset 0 -1px 0 rgba(255,255,255,0.07);
+        }
+        .entry-card:hover .entry-cover img { transform: none; }
+        .related-item:hover { transform: none; }
+        .prev-next a:hover { transform: none; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after {
+            animation-duration: 0.001ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.001ms !important;
+        }
+        .bg-layer { animation: none; }
+        .blob { animation: none; }
+        .intro-overlay { clip-path: inset(0 0 0 0); }
+        .intro-overlay.done { clip-path: inset(0 0 100% 0); }
+    }
+</style>
+</head>
+<body class="intro-locked">
+
+
+<div class="intro-overlay" id="introOverlay">
+    <div class="intro-inner">
+        <h1 class="intro-title" data-text="崇实2025级1班"></h1>
+        <div class="intro-line"></div>
+        <div class="intro-subtitle">百科WiKi</div>
+    </div>
+</div>
+
+
+<div class="bg-layer" id="bgLayer" aria-hidden="true"></div>
+<div class="bg-overlay" aria-hidden="true"></div>
+<div class="bg-blobs" aria-hidden="true">
+    <div class="blob blob1"></div>
+    <div class="blob blob2"></div>
+    <div class="blob blob3"></div>
+</div>
+
+<div class="wiki-container">
+    <header class="header">
+        <div class="logo">
+            <a href="#/" class="logo-link"><h1>崇实2025级1班百科 <span>WIKI</span></h1></a>
+        </div>
+    </header>
+
+    <main id="viewContainer"></main>
+
+    <div class="footer">崇实2025级1班百科WIKI  by fengxing2202</div>
+</div>
+
+<audio id="bgMusic" loop preload="auto" playsinline>
+
+    <source src="" type="audio/mpeg">
+</audio>
+<button class="music-btn hidden" id="musicToggle" aria-label="播放/暂停背景音乐" title="背景音乐">
+    <span class="music-icon">♪</span>
+</button>
+
+<script>
+/* =========================================================================
+   ★★★ 优秀的前端不会写死路径？ 吗？★★★
+   ========================================================================= */
+const CONFIG = {
+    /* 【背景大图路径】电脑端
+       牢记 */
+    backgroundImage: 'back.jpg',
+
+    /* 【背景大图路径】手机端
+       窄屏时启用 */
+    backgroundImageMobile: 'back.jpg',
+
+    /* 【背景音乐路径】
+       牢记x2 */
+    backgroundMusic: 'play.mp3'
+};
+
+/* =========================================================================
+   词条数据，请投稿的同学详阅
+   ─────────────────────────────────────────────────────────────────────────
+   每个词条支持以下字段：
+     id          : 唯一编号（字符串）
+     title       : 标题
+     image       : 词条封面图路径（留空则不显示）
+     body        : 摘要（用于卡片摘要显示）
+     sections    : 正文数组，每段支持：
+                     heading : 小标题
+                     content : 段落正文
+                     image   : 段落配图路径（可选）
+                     caption : 图片说明（可选）
+     keywords    : 关键字数组
+     related     : 关联词条标题数组
+   ========================================================================= */
+const entries = [
+    {
+        id: '0',
+        title: '一班WIKI词条征集',
+        image: 'p0.png',
+        body: '我们新建了此站，用于收录各种关于崇实2025级一班的百科词条，作为一班WIKI。我们希望广泛征集词条来扩充本站，可以是关于一班的一切。',
+        sections: [
+            {
+                heading: '关于本站',
+                image: '',
+                caption: '',
+                content: '我们新建了此站，用于收录各种关于崇实2025级一班的百科词条，作为一班WIKI。我们希望广泛征集词条来扩充本站，可以是关于一班的一切，可以关于梗、人物、事件或是别的文章。'
+            },
+            {
+                heading: '如何投稿',
+                image: '',
+                caption: '',
+                content: '如果你不确定具体的样式，可以看一些本站的其余词条，大概了解一下。投稿的词条可以包括：标题、正文、关键字（这会在搜索的算法里起作用）以及你想要关联的其它词条。'
+            },
+            {
+                heading: '运营承诺',
+                image: '',
+                caption: '',
+                content: '无需担心本网站运营的持久性，它在2025级高中毕业前一定不会关闭，7×24H 可以访问。\n\n最后编辑：23/9/2026。fengxing2202。'
+            }
+        ],
+        keywords: [],
+        related: []
+    },
+    {
+        id: 'gala0',
+        title: '葛乐',
+        image: 'pgala.jpg',
+        body: '源于班级成员葛乐山同学。由于其严肃的状态和及其难绷的外表，其成为1班绷神，没有一个人对绷是可以绷过葛乐山的。',
+        sections: [
+            {
+                heading: '起源',
+                image: '',
+                caption: '',
+                content: '源于班级成员葛乐山同学。由于其严肃的状态和及其难绷的外表，其成为1班绷神，没有一个人对绷是可以绷过葛乐山的。'
+            },
+            {
+                heading: '语义演变',
+                image: '',
+                caption: '',
+                content: '在之后的传唱中，葛乐逐渐成为了对葛乐山的称呼，并且发展出了新的意思。葛乐可以是构成物质的基本微粒，也可以是一个物种，与人类齐名，据说葛乐山和葛乐水就是葛乐种族。'
+            },
+            {
+                heading: '文化影响',
+                image: 'pgala_0.png',
+                caption: '相传这是葛乐的另一形态，这只是葛乐素颜的低谷（《鸣潮》绯雪）',
+                content: '于是葛乐成为了一种魔音，人们时常会不由自主地来上一句葛乐以相互打招呼。葛乐已经成为了1班最为热门的口头语。其后也衍生出大葛乐的叫法。\n\n最后编辑：24/9/2026。fengxing2202。'
+            }
+        ],
+        keywords: ['葛乐', '知名人物', '大葛乐', '葛乐山', '葛乐水'],
+        related: []
+    },
+    {
+        id: 'a0',
+        title: '起',
+        image: 'pa0.jpg',
+        body: '源于崇实2025级非一班的李嘉起同学。由于其惊天地泣鬼神的作风，在全级部名声显赫。',
+        sections: [
+            {
+                heading: '起源',
+                image: '',
+                caption: '',
+                content: '源于崇实2025级非一班的李嘉起同学。由于其惊天地泣鬼神的作风，在全级部名声显赫。'
+            },
+            {
+                heading: '在班级中的传播',
+                image: '',
+                caption: '',
+                content: '而由于其名字和一班李嘉辰同学很是相似，于是李嘉辰又被称为“起”，在班级中广为流传，成为一种口头语。\n\n最后编辑：24/9/2026。fengxing2202。'
+            }
+        ],
+        keywords: ['李嘉辰', '李嘉起', '起'],
+        related: []
+    },
+    {
+        id: 'a1',
+        title: '边走边吃',
+        image: 'pa1.jpg',
+        body: '源于龙口一中有不能边走边吃的神奇校规。在2026年9月，一班有两位同学因为在食堂门口走而嘴里嚼东西，被综合科工作人员拍照上传学校工作群通报。',
+        sections: [
+            {
+                heading: '神奇校规',
+                image: '',
+                caption: '',
+                content: '源于龙口一中有不能边走边吃的神奇校规。人们并不知道边走边吃到底是如何得不雅观和不得体。'
+            },
+            {
+                heading: '事件经过',
+                image: 'pa1_0.jpg',
+                caption: '《检讨》真迹，现存于磨砺博物馆',
+                content: '在2026年9月，一班有两位同学因为在食堂门口走而嘴里嚼东西，被综合科工作人员拍照上传学校工作群通报，被斥责为一班和崇实学部的耻辱。'
+            },
+            {
+                heading: '为何火爆',
+                image: '',
+                caption: '',
+                content: '该事件如此火爆是因为其荒诞性令人忍俊不禁。\n\n最后编辑：24/9/2026。fengxing2202。'
+            }
+        ],
+        keywords: ['边走边吃', '吃大枣', '拍照'],
+        related: []
+    },
+    {
+        id: 'a2',
+        title: '小子衿',
+        image: 'pa2.jpg',
+        body: '源于一班化学老师成君华，其经常在课上提到的一位网络育儿博主，视频主体就是名为小子衿的小女孩。',
+        sections: [
+            {
+                heading: '来源',
+                image: '',
+                caption: '',
+                content: '源于一班化学老师成君华，其经常在课上提到的一位网络育儿博主，视频主体就是名为小子衿的小女孩。'
+            },
+            {
+                heading: '详述',
+                image: 'pa2_0.jpg',
+                caption: '来自视频号截图，小子衿正在做鸡兔同笼的数学题',
+                content: '成老师经常讲着讲着课就提到小子衿的事，分享小子衿在视频中展示又学会了什么新内容。可以看出小子衿深受其喜爱。人们常常调侃小子衿是否已经学会了杂化轨道。'
+            },
+        ],
+        keywords: ['成君华', '小子衿'],
+        related: []
+    }
+];
+
+
+(function applyConfig() {
+    const bgLayer = document.getElementById('bgLayer');
+    const mqMobile = window.matchMedia('(max-width: 720px)');
+
+    function applyBg() {
+        const isMobile = mqMobile.matches;
+        const img = isMobile
+            ? (CONFIG.backgroundImageMobile && CONFIG.backgroundImageMobile.trim() !== ''
+                ? CONFIG.backgroundImageMobile
+                : CONFIG.backgroundImage)
+            : CONFIG.backgroundImage;
+
+        if (img && img.trim() !== '') {
+            bgLayer.classList.add('has-image');
+            bgLayer.style.setProperty('--bg-image', `url('${img}')`);
+        } else {
+            bgLayer.classList.remove('has-image');
+            bgLayer.style.removeProperty('--bg-image');
+        }
+    }
+
+    applyBg();
+
+    if (mqMobile.addEventListener) {
+        mqMobile.addEventListener('change', applyBg);
+    } else if (mqMobile.addListener) {
+        mqMobile.addListener(applyBg);
+    }
+    window.addEventListener('resize', applyBg);
+
+    const bgMusic = document.getElementById('bgMusic');
+    const btn = document.getElementById('musicToggle');
+    if (CONFIG.backgroundMusic && CONFIG.backgroundMusic.trim() !== '') {
+        const source = bgMusic.querySelector('source');
+        if (source) {
+            source.src = CONFIG.backgroundMusic;
+        } else {
+            bgMusic.src = CONFIG.backgroundMusic;
+        }
+        bgMusic.load();
+        btn.classList.remove('hidden');
+    } else {
+        btn.classList.add('hidden');
+    }
+})();
+
+
+
+(function initIntro() {
+    const overlay = document.getElementById('introOverlay');
+    if (!overlay) return;
+
+  
+    const titleEl = overlay.querySelector('.intro-title');
+    const text = titleEl.dataset.text || titleEl.textContent || '';
+    titleEl.textContent = '';
+    [...text].forEach((ch, i) => {
+        const span = document.createElement('span');
+        span.className = 'intro-char';
+        span.textContent = ch === ' ' ? '\u00A0' : ch;
+     
+        span.style.animationDelay = (0.12 + i * 0.07).toFixed(2) + 's';
+        titleEl.appendChild(span);
+    });
+
+   
+    const lastCharDelay = 0.12 + Math.max(0, text.length - 1) * 0.07;
+    const titleDoneAt = (lastCharDelay + 1.05) * 1000;   
+
+    const exitAt = Math.max(titleDoneAt + 750, 2600);
+
+    setTimeout(() => {
+        overlay.classList.add('done');
+        document.body.classList.remove('intro-locked');
+     
+        setTimeout(() => {
+            if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
+        }, 1400);
+    }, exitAt);
+})();
+
+
+
+const viewContainer = document.getElementById('viewContainer');
+let currentQuery = '';
+let debounceTimer = null;
+let isComposing = false;
+
+function escapeHtml(str) {
+    return String(str == null ? '' : str).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+}
+function escapeRegExp(string) {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+function highlightText(text, query) {
+    if (!query || !query.trim()) return escapeHtml(text);
+    const q = query.trim();
+    const re = new RegExp(`(${escapeRegExp(q)})`, 'gi');
+    return escapeHtml(text).replace(re, '<span class="highlight">$1</span>');
+}
+function excerpt(text, n = 64) {
+    if (!text) return '';
+    return text.length > n ? text.slice(0, n) + '…' : text;
+}
+
+function getFullSearchText(entry) {
+    let t = entry.body || '';
+    if (entry.sections && entry.sections.length) {
+        entry.sections.forEach(s => {
+            if (s.heading) t += ' ' + s.heading;
+            if (s.content) t += ' ' + s.content;
+        });
+    }
+    return t;
+}
+
+function getEntrySummary(entry) {
+    if (entry.body && entry.body.trim()) return entry.body;
+    if (entry.sections && entry.sections.length) {
+        return entry.sections.map(s => s.content || '').filter(Boolean).join(' ');
+    }
+    return '';
+}
+
+/* -------- 搜索算法，也许会有数学家帮忙优化吧，到底谁才是最会算向量的呢 -------- */
+function getMatchScore(entry, query) {
+    const q = query.trim().toLowerCase();
+    if (!q) return 0;
+    let score = 0;
+    if (entry.title.toLowerCase().includes(q)) score += 100;
+    if (entry.keywords.some(kw => kw.toLowerCase().includes(q))) score += 50;
+    if (getFullSearchText(entry).toLowerCase().includes(q)) score += 20;
+    return score;
+}
+function filterAndSortEntries(query) {
+    const q = query.trim();
+    if (!q) return [...entries];
+    return entries
+        .map(entry => ({ entry, score: getMatchScore(entry, q) }))
+        .filter(item => item.score > 0)
+        .sort((a, b) => b.score - a.score)
+        .map(item => item.entry);
+}
+
+function renderHome() {
+    document.title = '崇实2025级1班· 百科WIKI';
+
+    const filtered = filterAndSortEntries(currentQuery);
+    const q = currentQuery.trim();
+
+    viewContainer.innerHTML = `
+        <div class="home-view">
+            <div class="search-section">
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="搜梗、搜关键字、搜正文..."
+                           autocomplete="off" value="${escapeHtml(currentQuery)}">
+                    <button id="searchBtn">🔍 搜索</button>
+                </div>
+                <div class="search-hint">站长:fengxing2202</div>
+            </div>
+
+            <div class="status-bar">
+                <span id="resultCount">共 ${filtered.length} 个词条${q ? `（搜索「${escapeHtml(q)}」）` : ''}</span>
+                <button class="clear-search" id="clearSearchBtn">清除搜索</button>
+            </div>
+
+            <div class="wiki-grid" id="wikiGrid"></div>
+        </div>
+    `;
+
+    const grid = document.getElementById('wikiGrid');
+
+    if (filtered.length === 0) {
+        grid.innerHTML = `<div class="empty-state">😶 没有找到匹配的词条<br>也许你应该试试别的？</div>`;
+        return;
+    }
+
+    grid.innerHTML = filtered.map(entry => {
+        const titleHtml = q ? highlightText(entry.title, q) : escapeHtml(entry.title);
+        const summary = getEntrySummary(entry);
+        const bodyHtml  = q ? highlightText(summary, q)  : escapeHtml(summary);
+        const kwHtml = entry.keywords.map(kw =>
+            `<span class="keyword-badge clickable" data-search-term="${escapeHtml(kw)}">${
+                q ? highlightText(kw, q) : escapeHtml(kw)
+            }</span>`
+        ).join('');
+        const relHtml = entry.related.map(title => relatedLinkHtml(title)).join('');
+
+        const hasCover = entry.image && entry.image.trim() !== '';
+        const coverHtml = hasCover
+            ? `<div class="entry-cover"><img src="${escapeHtml(entry.image)}" alt="${escapeHtml(entry.title)}" loading="lazy"></div>`
+            : '';
+
+        return `
+            <article class="entry-card ${hasCover ? 'has-cover' : ''}">
+                ${coverHtml}
+                <h3 class="entry-title">
+                    <span class="pin">📌</span>
+                    <a class="entry-link" href="#/entry/${entry.id}">${titleHtml}</a>
+                </h3>
+                <div class="entry-body">${bodyHtml}</div>
+                <div class="entry-keywords">${kwHtml}</div>
+                <div class="related-links">
+                    <span class="related-label">🔗 关联：</span>
+                    ${relHtml || '<span style="color:rgba(255,255,255,0.55);">暂无</span>'}
+                </div>
+                <a class="read-more" href="#/entry/${entry.id}">阅读全文 →</a>
+            </article>
+        `;
+    }).join('');
+
+    grid.querySelectorAll('.entry-card').forEach((card, i) => {
+        card.style.animationDelay = Math.min(i * 0.06, 0.42) + 's';
+    });
+}
+
+function relatedLinkHtml(title) {
+    const target = entries.find(e => e.title === title);
+    if (target) {
+        return `<a class="related-link" href="#/entry/${target.id}">${escapeHtml(title)}</a>`;
+    }
+    return `<span class="related-link missing" data-search-term="${escapeHtml(title)}">${escapeHtml(title)}</span>`;
+}
+
+
+function renderDetail(id) {
+    const entry = entries.find(e => e.id === id);
+
+    if (!entry) {
+        renderNotFound(id);
+        return;
+    }
+
+    document.title = `${entry.title} · 崇实2025级1班百科`;
+
+    const idx = entries.findIndex(e => e.id === id);
+    const prev = idx > 0 ? entries[idx - 1] : null;
+    const next = idx < entries.length - 1 ? entries[idx + 1] : null;
+
+    const forward = entry.related
+        .map(title => entries.find(e => e.title === title))
+        .filter(Boolean);
+    const backward = entries.filter(e => e.id !== entry.id && e.related.includes(entry.title));
+
+    const seen = new Set([entry.id]);
+    const relatedList = [];
+    [...forward, ...backward].forEach(e => {
+        if (!seen.has(e.id)) { seen.add(e.id); relatedList.push(e); }
+    });
+
+    const relatedHtml = relatedList.length
+        ? `<div class="related-grid">${relatedList.map(e => `
+                <a class="related-item" href="#/entry/${e.id}">
+                    <div class="related-item-title">${escapeHtml(e.title)}</div>
+                    <div class="related-item-desc">${escapeHtml(excerpt(getEntrySummary(e), 58))}</div>
+                </a>`).join('')}</div>`
+        : `<div class="related-empty">暂无关联词条</div>`;
+
+    const keywordsHtml = entry.keywords.map(kw =>
+        `<span class="keyword-badge clickable" data-search-term="${escapeHtml(kw)}">${escapeHtml(kw)}</span>`
+    ).join('');
+
+    const hasCover = entry.image && entry.image.trim() !== '';
+    const coverHtml = hasCover
+        ? `<div class="detail-cover"><img src="${escapeHtml(entry.image)}" alt="${escapeHtml(entry.title)}" loading="lazy"></div>`
+        : '';
+
+    let contentHtml = '';
+    if (entry.sections && entry.sections.length) {
+        contentHtml = entry.sections.map(sec => {
+            const heading = sec.heading
+                ? `<h2 class="section-heading">${escapeHtml(sec.heading)}</h2>`
+                : '';
+            const figCaption = sec.caption
+                ? `<figcaption>${escapeHtml(sec.caption)}</figcaption>`
+                : '';
+            const figure = (sec.image && sec.image.trim() !== '')
+                ? `<figure class="section-figure"><img src="${escapeHtml(sec.image)}" alt="${escapeHtml(sec.heading || entry.title)}" loading="lazy">${figCaption}</figure>`
+                : '';
+            const content = sec.content
+                ? `<div class="section-content">${escapeHtml(sec.content)}</div>`
+                : '';
+            return `<section class="entry-section">${heading}${figure}${content}</section>`;
+        }).join('');
+    } else {
+        contentHtml = `<div class="detail-body">${escapeHtml(entry.body || '')}</div>`;
+    }
+
+    viewContainer.innerHTML = `
+        <div class="detail-view">
+            <a class="back-home" href="#/">← 返回词条列表</a>
+
+            <article class="detail-card">
+                <h1 class="detail-title">
+                    <span class="pin">📌</span>
+                    <span>${escapeHtml(entry.title)}</span>
+                </h1>
+                <div class="detail-meta">词条编号 ${entry.id.toUpperCase()} · ${entry.keywords.length} 个关键字${entry.sections && entry.sections.length ? ` · ${entry.sections.length} 段` : ''}</div>
+
+                ${coverHtml}
+
+                ${contentHtml}
+
+                <div class="detail-keywords">
+                    <span class="section-label">关键字：</span>
+                    ${keywordsHtml || '<span style="color:rgba(255,255,255,0.5);">无</span>'}
+                </div>
+
+                <h2 class="section-title">🔗 关联词条</h2>
+                ${relatedHtml}
+            </article>
+
+            <nav class="prev-next">
+                ${prev
+                    ? `<a href="#/entry/${prev.id}"><span class="nav-label">← 上一个词条</span><span class="nav-title">${escapeHtml(prev.title)}</span></a>`
+                    : `<span class="placeholder"></span>`}
+                ${next
+                    ? `<a class="next" href="#/entry/${next.id}"><span class="nav-label">下一个词条 →</span><span class="nav-title">${escapeHtml(next.title)}</span></a>`
+                    : `<span class="placeholder"></span>`}
+            </nav>
+        </div>
+    `;
+}
+
+function renderNotFound(id) {
+    document.title = '词条不存在 · 崇实2025级1班百科';
+    viewContainer.innerHTML = `
+        <div class="not-found">
+            <h2> 没有找到这个词条</h2>
+            <p>编号「${escapeHtml(id)}」不存在，可能链接已失效或词条尚未收录</p>
+            <p style="margin-top:1.4rem;">
+                <a class="back-home" href="#/">← 返回词条列表</a>
+            </p>
+        </div>
+    `;
+}
+
+
+function router() {
+    const hash = decodeURIComponent(window.location.hash.replace(/^#/, ''));
+
+    if (hash.startsWith('/entry/')) {
+        renderDetail(hash.slice('/entry/'.length));
+    } else {
+        renderHome();
+    }
+    window.scrollTo({ top: 0, behavior: 'auto' });
+}
+
+function doSearch(query) {
+    currentQuery = query;
+    const hash = window.location.hash;
+    if (hash && hash !== '#/' && hash !== '#') {
+        window.location.hash = '#/';
+    } else {
+        renderHome();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+}
+
+
+viewContainer.addEventListener('compositionstart', (e) => {
+    if (e.target && e.target.id === 'searchInput') {
+        isComposing = true;
+        clearTimeout(debounceTimer);
+    }
+}, true);
+viewContainer.addEventListener('compositionend', (e) => {
+    if (e.target && e.target.id === 'searchInput') {
+        isComposing = false;
+        const val = e.target.value;
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+            if (val !== currentQuery) doSearch(val);
+        }, 80);
+    }
+}, true);
+
+viewContainer.addEventListener('click', (e) => {
+    if (e.target.closest('#searchBtn')) {
+        const input = document.getElementById('searchInput');
+        doSearch(input ? input.value : '');
+        return;
+    }
+    if (e.target.closest('#clearSearchBtn')) {
+        doSearch('');
+        return;
+    }
+    const searchTermEl = e.target.closest('[data-search-term]');
+    if (searchTermEl) {
+        e.preventDefault();
+        doSearch(searchTermEl.dataset.searchTerm);
+    }
+});
+
+viewContainer.addEventListener('keydown', (e) => {
+    if (e.target.id === 'searchInput' && e.key === 'Enter') {
+        if (isComposing || e.isComposing || e.keyCode === 229) return;
+        e.preventDefault();
+        clearTimeout(debounceTimer);
+        doSearch(e.target.value);
+    }
+});
+
+viewContainer.addEventListener('input', (e) => {
+    if (e.target.id !== 'searchInput') return;
+    if (isComposing || e.isComposing) return;
+    clearTimeout(debounceTimer);
+    const val = e.target.value;
+    debounceTimer = setTimeout(() => {
+        if (val !== currentQuery) doSearch(val);
+    }, 300);
+});
+
+window.addEventListener('hashchange', router);
+router();
+
+
+(function initMusic() {
+    const bgMusic = document.getElementById('bgMusic');
+    const btn = document.getElementById('musicToggle');
+    if (!bgMusic || !btn) return;
+    if (btn.classList.contains('hidden')) return;
+
+    bgMusic.volume = 0.35;
+    let userPaused = false;
+
+    function markPlaying(isPlaying) {
+        btn.classList.toggle('playing', isPlaying);
+    }
+    function tryPlay() {
+        const p = bgMusic.play();
+        if (p && typeof p.then === 'function') {
+            p.then(() => markPlaying(true)).catch(() => markPlaying(false));
+        } else {
+            markPlaying(!bgMusic.paused);
+        }
+    }
+
+    tryPlay();
+
+    function firstGesture() {
+        if (!userPaused && bgMusic.paused) tryPlay();
+        document.removeEventListener('click', firstGesture);
+        document.removeEventListener('touchstart', firstGesture);
+        document.removeEventListener('keydown', firstGesture);
+    }
+    document.addEventListener('click', firstGesture);
+    document.addEventListener('touchstart', firstGesture, { passive: true });
+    document.addEventListener('keydown', firstGesture);
+
+    btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (bgMusic.paused) {
+            userPaused = false;
+            const p = bgMusic.play();
+            if (p && typeof p.then === 'function') {
+                p.then(() => markPlaying(true)).catch(() => markPlaying(false));
+            } else {
+                markPlaying(true);
+            }
+        } else {
+            userPaused = true;
+            bgMusic.pause();
+            markPlaying(false);
+        }
+    });
+
+    bgMusic.addEventListener('play',  () => markPlaying(true));
+    bgMusic.addEventListener('pause', () => markPlaying(false));
+})();
+</script>
+</body>
+</html>
